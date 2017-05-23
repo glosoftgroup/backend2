@@ -10,10 +10,19 @@ from django.utils.translation import pgettext_lazy
 
 from ...product.models import (AttributeChoiceValue, Product, ProductAttribute,
                                ProductClass, ProductImage, ProductVariant,
-                               Stock, StockLocation, VariantImage)
+                               Stock, StockLocation, VariantImage, ProductTax)
 from .widgets import ImagePreviewWidget
 from ...search import index as search_index
 
+class ProductTaxForm(forms.ModelForm):
+    class Meta:
+        model = ProductTax
+        exclude = []
+    def __init__(self, *args, **kwargs):
+        product_classes = kwargs.pop('product_classes', [])
+        super(ProductTaxForm, self).__init__(*args, **kwargs)     
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
 class ProductClassSelectorForm(forms.Form):
     MAX_RADIO_SELECT_ITEMS = 5

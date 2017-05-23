@@ -12,7 +12,7 @@ from . import forms
 from ...core.utils import get_paginator_items
 from ...product.models import (Product, ProductAttribute, ProductClass,
                                ProductImage, ProductVariant, Stock,
-                               StockLocation)
+                               StockLocation, ProductTax)
 from ..views import staff_member_required
 
 
@@ -453,4 +453,28 @@ def stock_location_delete(request, location_pk):
     ctx = {'location': location, 'stock_count': stock_count}
     return TemplateResponse(
         request, 'dashboard/product/stock_locations/modal_confirm_delete.html',
+        ctx)
+from .forms import ProductTaxForm
+@staff_member_required
+def tax_list(request):
+    form = ProductTaxForm(request)
+    ctx = {'tax': ProductTax.objects.all()}
+    return TemplateResponse(
+        request, 'dashboard/product/tax_list.html',
+        ctx)
+
+@staff_member_required
+def tax_add(request):
+    product_tax = ProductTax()
+    formadd = ProductTaxForm(request.POST or None,
+                                  instance=product_tax)
+    if form.is_valid():
+        tax = formadd.save()
+        msg = pgettext_lazy(
+            'Dashboard message', 'Added product type %s') % product_class
+        messages.success(request, msg)
+        return redirect('dashboard:tax-list')
+    ctx = {'tax': ProductTax.objects.all(),'form':formadd}
+    return TemplateResponse(
+        request, 'dashboard/product/tax_form.html',
         ctx)

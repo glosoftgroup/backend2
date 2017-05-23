@@ -13,7 +13,10 @@ urlpatterns = [
         views.product_delete, name='product-delete'),
     url(r'^add/(?P<class_pk>[0-9]+)/$',
         views.product_create, name='product-add'),
-
+    url(r'^tax/$',
+        views.tax_list, name='tax-list'),
+    url(r'^tax/add$',
+        views.tax_add, name='tax-add'),
     url(r'^classes/$',
         views.product_class_list, name='product-class-list'),
     url(r'^classes/add/$',

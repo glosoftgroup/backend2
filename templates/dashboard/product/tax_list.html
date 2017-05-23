@@ -1,0 +1,30 @@
+{% extends "dashboard/base.html" %}
+{% block title %}
+ Taxes- {{ block.super }}
+{% endblock %}
+{% block breadcrumbs %}
+ 
+    <li class="active">
+      Taxes
+    </li>
+
+{% endblock %}
+{% block header_extra %}
+<li style='padding: 9px;'>
+	<a class="" href="{% url 'dashboard:tax-add' %}"><i class="icon-plus"></i>
+	 Add Tax
+	</a>
+</li>
+{% endblock %}
+{% block menu_tax_list %}active{% endblock %}
+{% block content %}
+  
+      <!-- Header and footer fixed -->
+      <div class="panel panel-flat">
+      {% if tax %}
+	      {% for tx in tax %}
+	      	{{ tx.tax}}
+	      {% endfor %}
+	  {% endif %}
+      </div>
+{% endblock %}

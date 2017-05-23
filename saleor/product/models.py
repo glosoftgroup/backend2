@@ -100,6 +100,17 @@ class ProductClass(models.Model):
         return '<%s.%s(pk=%r, name=%r)>' % (
             class_.__module__, class_.__name__, self.pk, self.name)
 
+class ProductTax(models.Model):
+    TAX_SCOPE = (
+        ('sales', 'Sales'),
+        ('purchase', 'Purchase'),       
+    )
+    scope = models.CharField(max_length=1, choices=TAX_SCOPE)
+    tax_label = models.CharField(
+        pgettext_lazy('Label on invoices', 'Short text printed on invoices'),
+        max_length=128, blank=True)
+    tax = models.IntegerField( pgettext_lazy('Product Tax', 'tax %'),
+        validators=[MinValueValidator(0)], default=Decimal(0)) 
 
 class ProductManager(models.Manager):
 
@@ -113,6 +124,9 @@ class ProductManager(models.Manager):
 class Product(models.Model, ItemRange, index.Indexed):
     product_class = models.ForeignKey(
         ProductClass, related_name='products',
+        verbose_name=pgettext_lazy('Product field', 'product class'))
+    product_tax = models.ForeignKey(
+        ProductTax, related_name='products_tax',blank=True, null=True,
         verbose_name=pgettext_lazy('Product field', 'product class'))
     name = models.CharField(
         pgettext_lazy('Product field', 'name'), max_length=128)
@@ -475,3 +489,4 @@ class VariantImage(models.Model):
             'Variant image model', 'variant image')
         verbose_name_plural = pgettext_lazy(
             'Variant image model', 'variant images')
+

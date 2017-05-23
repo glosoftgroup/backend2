@@ -167,6 +167,10 @@
                     <a href="{% url 'dashboard:sale-list' %}">{% trans "Sales" context "Dashboard sales (discounts) list" %}
                     </a>
                     </li>
+                    <li class="{% block menu_tax_list %}{% endblock %}">
+                    <a href="{% url 'dashboard:tax-list' %}">Tax
+                    </a>
+                    </li>
 
                     <li class="{% block menu_vouchers_class %}{% endblock %}">
                     <a href="{% url 'dashboard:voucher-list' %}">
