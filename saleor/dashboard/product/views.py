@@ -468,13 +468,46 @@ def tax_add(request):
     product_tax = ProductTax()
     formadd = ProductTaxForm(request.POST or None,
                                   instance=product_tax)
-    if form.is_valid():
+    if formadd.is_valid():
         tax = formadd.save()
         msg = pgettext_lazy(
-            'Dashboard message', 'Added product type %s') % product_class
+            'Dashboard message', 'Added Tax') 
         messages.success(request, msg)
         return redirect('dashboard:tax-list')
-    ctx = {'tax': ProductTax.objects.all(),'form':formadd}
+    else:
+        ctx = {'tax':ProductTax.objects.all(),'form':formadd,'errors':formadd.errors}
+   
     return TemplateResponse(
         request, 'dashboard/product/tax_form.html',
         ctx)
+
+@staff_member_required
+def tax_edit(request, pk=None):
+    if pk:
+        instance = get_object_or_404(ProductTax, pk=pk)
+    else:
+        instance = ProductTax()
+    form = forms.ProductTaxForm(
+        request.POST or None, instance=instance)
+    if form.is_valid():
+        instance = form.save()
+        msg = pgettext_lazy(
+            'Product (Tax) message', 'Updated tax') if pk else pgettext_lazy(
+                'Sale (tax) message', 'Added tax')
+        messages.success(request, msg)
+        return redirect('dashboard:tax-list')
+    ctx = {'sale': instance, 'form': form,'tax_instance':instance}
+    return TemplateResponse(request, 'dashboard/product/tax_form.html', ctx)
+
+@staff_member_required
+def tax_delete(request, pk):
+    instance = get_object_or_404(ProductTax, pk=pk)
+    if request.method == 'POST':
+        instance.delete()
+        messages.success(
+            request,
+            pgettext_lazy('Tax message', 'Deleted Tax %s') % (instance.name,))
+        return redirect('dashboard:tax-list')
+    ctx = {'instance': instance}
+    return TemplateResponse(
+        request, 'dashboard/product/tax_list.html', ctx)

@@ -23,10 +23,17 @@
 {% endblock %}
 {% block menu_tax_list %}active{% endblock %}
 {% block content %}
-  this is a form
+  {% if errors %}
+  	
+      <div class="row">
+        <div class='alert-danger'>{{ errors }}</div>
+      </div>
+   
+  {% endif %}
       <!-- Header and footer fixed -->
       <div class="panel panel-flat">
-       <form method="post" id="form-stock" enctype="multipart/form-data"> {% csrf_token %}
+       <form method="post" id="form-producttax" enctype="multipart/form-data"> {% csrf_token %}
+        
        <div class="panel panel-flat">
 		<div class="panel-heading">
 			<h5 class="panel-title">Add New Tax</h5>
@@ -46,8 +53,13 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Tax Scope</label>
-										{{ form.scope }}
-									
+									{{ form.scope }}	
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Tax name (optional)</label>
+									{{ form.name }}	
 								</div>
 							</div>
 
@@ -65,7 +77,12 @@
 			</div>
 
 			<div class="text-right">
-				<button type="submit" class="btn btn-primary">Create <i class="icon-arrow-right14 position-right"></i></button>
+			 {% if tax_instance.pk %}
+				<button type="submit" class="btn btn-primary">Update <i class="icon-arrow-right14 position-right"></i></button>
+			 {% else %}
+			 	<button type="submit" class="btn btn-primary">Create <i class="icon-arrow-right14 position-right"></i></button>
+			 {% endif %}
+
 			</div>
 		</div>
 	</div>

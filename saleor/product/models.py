@@ -105,7 +105,10 @@ class ProductTax(models.Model):
         ('sales', 'Sales'),
         ('purchase', 'Purchase'),       
     )
-    scope = models.CharField(max_length=1, choices=TAX_SCOPE)
+    name = models.CharField(
+        pgettext_lazy('Tax name', 'Tax name (optional)'),
+        max_length=128, blank=True)
+    scope = models.CharField(max_length=128,choices=TAX_SCOPE)
     tax_label = models.CharField(
         pgettext_lazy('Label on invoices', 'Short text printed on invoices'),
         max_length=128, blank=True)

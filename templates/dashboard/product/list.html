@@ -60,14 +60,14 @@
   <div class="row">
     <div class="col s12">
    
-      {% if products %}
+      {% if products %}      
       <!-- Header and footer fixed -->
       <div class="panel panel-flat">
-        <div class="panel-heading">
-          <h5 class="panel-title">List of Products</h5>
+        <div class="panel-heading">        
+          {% include "dashboard/includes/_pagination.html" with page_obj=products %}
           <div class="heading-elements">
-            <ul class="icons-list">
-              <li><a data-action="collapse"></a></li>             
+            <ul class="icons-list">              
+              <li><a data-action="collapse"></a></li>       
               <li><a data-action="close"></a></li>
             </ul>
           </div>
@@ -208,4 +208,6 @@
       </form>
     </div>
   </div>
+
+  {% include "dashboard/includes/_modal.html"  %}
 {% endblock %}

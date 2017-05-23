@@ -24,7 +24,7 @@ function onScroll(func) {
 new SVGInjector().inject(document.querySelectorAll('svg[data-src]'));
 
 function openModal() {
-  $('.modal-trigger-customj').on('click', function (e) {
+  $('.modal-trigger-customsdf').on('click', function (e) {
     let that = this;
     $.ajax({
       url: $(this).data('href'),
@@ -35,7 +35,7 @@ function openModal() {
         initSelects();
         $modal.modal();
       }
-    });
+     });
 
     e.preventDefault();
   });
@@ -67,7 +67,7 @@ $(document).ready(function() {
     });
   }
   initSelects();
-  $('.modaladf').modal();
+  $('.modalssdf').modal();
 
   let $tabs = $('ul.tabs');
   if ($tabs.length) {
@@ -108,7 +108,7 @@ $(document).ready(function() {
           $(that).parent().html(response.responseText);
           initSelects();
         } else {
-          $('.modal-closejj').click();
+          $('.modal-closesdf').click();
         }
       },
       success: function(response) {
@@ -120,8 +120,8 @@ $(document).ready(function() {
       }
     });
     e.preventDefault();
-  }).on('click', '.modal-closen', function() {
-    $('.modalj').modal('close');
+  }).on('click', '.modal-close', function() {
+    $('.modal').modal('close');
   });
 
   function isTablet() {
@@ -234,7 +234,7 @@ $('.datepicker').pickadate({
 });
 
 function initSelects() {
-  $('select:not(.browser-default):not([multiple])').material_select();
+  $('select12:not(.browser-default):not([multiple])').material_select();
   $('select[multiple]:not(.browser-default)').select2({width: '100%'});
 }
 // Clickable rows in dashboard tables

@@ -18,8 +18,7 @@ class ProductTaxForm(forms.ModelForm):
     class Meta:
         model = ProductTax
         exclude = []
-    def __init__(self, *args, **kwargs):
-        product_classes = kwargs.pop('product_classes', [])
+    def __init__(self, *args, **kwargs):        
         super(ProductTaxForm, self).__init__(*args, **kwargs)     
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
