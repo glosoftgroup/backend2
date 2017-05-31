@@ -62,56 +62,12 @@
 {% block menu_catalogue_class %} active{% endblock %}
 
 {% block content %}
-  {% if product.pk %}
-    <div class="row">
-      <div class="col s12">
-        
-        <ul class="tabs">
-          <li class="tab col s3" role="presentation">
-            <a href="#details" class="active" role="tab">
-              <span>
-                {% trans "Basic Settings" context "Product form tab" %}
-              </span>
-              <svg data-src="{% static "dashboard/images/edit.svg" %}" width="24" height="24" />
-            </a>
-          </li>
-          {% if product.product_class.has_variants %}
-            <li class="tab col s3" role="presentation">
-              <a href="#variants" role="tab">
-                <span>
-                  {% trans "Variants" context "Dashboard variants" %}
-                </span>
-                <svg data-src="{% static "dashboard/images/style.svg" %}" width="24" height="24" />
-              </a>
-            </li>
-          {% endif %}
-          <li class="tab col s3" role="presentation">
-            <a href="#stock" role="tab">
-              <span>
-                {% trans "Stock" context "Dashboard stock" %}
-              </span>
-              <svg data-src="{% static "dashboard/images/store.svg" %}" width="24" height="24" />
-            </a>
-          </li>
-          <li class="tab col s3" role="presentation">
-            <a href="#images" role="tab">
-              <span>
-                {% trans "Images" context "Product form tab" %}
-              </span>
-              <svg data-src="{% static "dashboard/images/collections.svg" %}" width="24" height="24" />
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  {% endif %}
-  <div class="tab-content" id="details">
-   <!-- 2 columns form -->
-        <form method="post" class="form-horizontal" id="form-product" enctype="multipart/form-data" novalidate>
-          {% csrf_token %}
+<div id='results'></div>
+<div class="row">
+    <div class="col-md-12">
             <div class="panel panel-flat">
               <div class="panel-heading">
-                <h5 class="panel-title">Product Type</h5>
+                <h6 class="panel-title">Product Details</h6>
                 <div class="heading-elements">
                   <ul class="icons-list">
                             <li><a data-action="collapse"></a></li>
@@ -122,40 +78,137 @@
               </div>
 
               <div class="panel-body">
+                <div class="tabbable tab-content-bordered">
+                  <ul class="nav nav-tabs nav-tabs-highlight">
+                  <!-- general settings tab -->
+                   {% if request.GET.tab %}                   
+                     <li>             
+                    {% else %}
+                      <li class="active">
+                    {% endif %}
+                    <a href="#bordered-tab1" data-toggle="tab">General Settings</a></li>
+                    {% if product.pk %}
+                    <!-- variant tab -->
+                    {% if request.GET.tab == 'variants'  %}                   
+                     <li class="active">
+                    {% else %}
+                      <li>             
+                    {% endif %}
+                    <a href="#bordered-tab2" data-toggle="tab">Product Variant</a></li>
+                    <!-- stock tab -->
+                   {% if request.GET.tab == 'stock'  %}                   
+                     <li class="active">
+                    {% else %}
+                      <li>             
+                    {% endif %}
+                    <a href="#stock-tab" data-toggle="tab">Stock</a></li>
+                    <!-- images tab -->
+                    {% if request.GET.tab == 'images'  %}                   
+                     <li class="active">
+                    {% else %}
+                      <li>             
+                    {% endif %}
+                    
+                    <a href="#images-tab" data-toggle="tab">Images</a></li>
+                    {% endif %}
+                    
+                  </ul>
+
+                  <div class="tab-content">
+                  {% if request.GET.tab %}                   
+                     <div class="tab-pane has-padding" id="bordered-tab1">            
+                    {% else %}
+                      <div class="tab-pane has-padding active" id="bordered-tab1">
+                    {% endif %}
+                   
+                       <!-- 2 columns form -->
+        <form method="post" class="form-horizontal" id="form-product" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          <!-- Tasks options -->
+          <div >
+              <div class="navbarnavbar-defaultnavbar-xs navbar-omponent">
+                <ul class="navnavbar-nav no-border visible-xs-block">
+                  <li><a class="text-center collapsed" data-toggle="collapse" data-target="#navbar-filter"><i class="icon-menu7"></i></a></li>
+                </ul>
+
+                <div class="navbar-collapse collapse" id="navbar-filter">
+                 
+                  <ul class="nav navbar-nav">
+                    <li class="">
+                                      
+                    </li>
+                  </ul>
+                 
+
+                  <div class="navbar-right">
+                    <p class="navbar-text">
+                    {% if product.pk %}
+              <a href="{% url 'dashboard:product-list' %}" class="label label-danger" style='box-shadow: 0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.18);'>
+                {% trans "Cancel" context "Dashboard cancel action" %}
+              </a>
+              <button type="submit" style='box-shadow: 0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.18);' class="label label-primary">
+                {% trans "Update" context "Dashboard update action" %}
+              </button>
+            {% else %}
+              <a href="{% url 'dashboard:product-list' %}" class="label label-danger" style='box-shadow: 0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.18);'>
+                {% trans "Cancel" context "Dashboard cancel action" %}
+              </a>
+              <button type="submit" style='box-shadow: 0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.18);' class="label label-primary">
+                {% trans "Create" context "Dashboard create action" %}
+              </button>
+            {% endif %}
+                    </p>
+                    
+                  </div>
+                </div>
+              </div>
+              </div>
+              <!-- /tasks options -->
+            <div class="panelpanel-flat">
+             
+              <div class="panel-body">
+              
+                {% if errors %}
+                <div class="alert alert-danger alert-styled-left">
+                  {{errors}} 
+                  </div>             
+                {% endif %}
+              
                 <div class="row">
                   <div class="col-md-6">
                     <fieldset>
-                      <legend class="text-semibold"><i class="icon-reading position-left"></i>  {{ product.product_class }}</legend>
-
+                    
+                    <div class="form-group">
+                      {{ form_classes }}
+                    </div>
                       <div class="form-group">
                         <label>Product Name:</label>
                         {{ product_form.name}}
-                      </div>
-
+                      </div> 
                       <div class="form-group">
+                        <label>Product Description:</label>
+                       {{ product_form.description }}
+                      </div>                   
+                     <div class="form-group" id='div_attributes'>
                         <label>Product Attributes</label>
                        {% for attribute_field in product_form.iter_attribute_fields %}
                        <div class="">
+                       <label>{{ attribute_field.label }}</label>
                         {{ attribute_field }}
                       </div>
                       {% endfor %}
                       </div>
-
-                      <div class="form-group">
-                        <label>Product Description:</label>
-                       {{ product_form.description }}
-                      </div>                     
+                                          
                     </fieldset>
                   </div>
 
                   <div class="col-md-6">
-                    <fieldset>
-                              <legend class="text-semibold"><i class="icon-cogs position-left"></i> More Settings</legend>
-
+                    <fieldset>                           
+                       
                       <div class="row">
                         <div class="col-md-6">
                           <div class="form-group">
-                            <label>Price:</label>
+                            <label>Sales Price:</label>
                             {{ product_form.price }}
                           </div>
                         </div>
@@ -171,11 +224,18 @@
                         </div>
                       </div>
 
-                      <div class="row">
+                      <div class="">
                         <div class="col-md-12">
+                          
+                          <div class="form-group">
+                            <label>Tax: %</label>
+                            {{ product_form.product_tax }}
+                          </div>
                           <div class="form-group">
                             <label>Categories:</label>
+                            <div class="multi-select-full">
                             {{ product_form.categories }}
+                            </div>
                           </div>
                         </div>
 
@@ -185,10 +245,14 @@
                            {{ product_form.available_on }}
                           </div>
                         </div>
-                        <div class='col-md-12'>
+                        <div class='col-md-6'>
                           <div class='form-group'>
-                           <label>Is Featured</label>
-                           {{ product_form.is_featured }}
+                           <label class="checkbox-inline">
+                            {{ product_form.is_featured }}
+                            {{ product_form.is_featured.label }}
+                            &nbsp;
+                          </label>
+                           
                           </div>
                         </div>
                       </div>
@@ -197,22 +261,23 @@
 
 
                     </fieldset>
-                  </div>
+                  </div>                  
                 </div>
+                
 
                 <div class="text-right">
                   {% if product.pk %}
-              <a href="{% url 'dashboard:product-list' %}" class="btn btn-flat">
+              <a href="{% url 'dashboard:product-list' %}" class="btn btn-flat ">
                 {% trans "Cancel" context "Dashboard cancel action" %}
               </a>
-              <button type="submit" class="btn waves-effect waves-light">
+              <button type="submit" class="btn btn-primary waves-effect waves-light">
                 {% trans "Update" context "Dashboard update action" %}
               </button>
             {% else %}
-              <a href="{% url 'dashboard:product-list' %}" class="btn btn-flat">
+              <a href="{% url 'dashboard:product-list' %}" class="btn   btn-flat">
                 {% trans "Cancel" context "Dashboard cancel action" %}
               </a>
-              <button type="submit" class="btn waves-effect waves-light">
+              <button type="submit" class="btn btn-primary  waves-effect waves-light">
                 {% trans "Create" context "Dashboard create action" %}
               </button>
             {% endif %}
@@ -221,24 +286,35 @@
             </div>
           </form>
           <!-- /2 columns form -->
-  </div>
-  
-
-  {% if product.pk  %}
-    {% if product.product_class.has_variants %}
-      <div id="variants" class="card tab-content">
+                    </div>
+                    <!-- panel product variant -->
+                    {% if request.GET.tab == 'variants'  %}                   
+                     <div class="tab-pane has-padding active" id="bordered-tab2">
+                    {% else %}
+                      <div class="tab-pane has-padding" id="bordered-tab2">            
+                    {% endif %}
+                    
+                    {% if product.pk %}
+                      {% if product.product_class.has_variants %}
+      <div id="variants" class="">
         <form method="post" action="{% url 'dashboard:variant-bulk-delete' product_pk=product.pk %}" novalidate>
           {% csrf_token %}
-          <div class="data-table-header-action">
-            <a href="{% url 'dashboard:variant-add' product_pk=product.pk %}" class="btn-data-table btn-show-when-unchecked btn-flat">
+          <div class="data-table-header-action" style="padding:12px;">
+            <a href="{% url 'dashboard:variant-add' product_pk=product.pk %}" class="btn-data-table btn-show-when-unchecked btn btn-primary">
               {% trans "Add" context "Dashboard add action" %}
             </a>
-            <a href="#modal-product-variant-delete" class="modal-trigger btn-data-table btn-show-when-checked btn-flat" style="display:none" hidden>
+            <a href="#modal-product-variant-delete" class="modal-trigger btn-data-table btn-show-when-checked btn btn-danger" style="display:none" hidden>
               {% trans "Delete" context "Dashboard delete action" %}
             </a>
 
-            <div class="modal" id="modal-product-variant-delete">
+            <div class="modal fade" id="modal-product-variant-delete">
+            <div class="modal-dialog">
               <div class="modal-content">
+              <div class="modal-header bg-blue">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title text-white">Delete Variant(s)</h6>
+              </div>
+              <div class="modal-body">
                 <h5>
                   {% trans "Are you sure?" context "Dashboard confirmation modal" %}
                 </h5>
@@ -247,22 +323,28 @@
                     You are about to delete variants of this product.
                   {% endblocktrans %}
                 </p>
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="modal-action btn-flat">
+                </div>
+                <!-- add footer -->
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-danger modal-action ">
                   {% trans "Delete" context "Dashboard delete action" %}
                 </button>
-                <a href="#!" class="modal-action modal-close btn-flat">
+                <a href="#!" data-dismiss="modal" class="modal-action btn btn-link ">
                   {% trans "Cancel" context "Dashboard cancel action" %}
                 </a>
               </div>
+                <!-- end footer -->
+              </div>
+              </div>
+              
             </div>
           </div>
           <div class="data-table-container">
-            <table class="bordered highlight responsive data-table">
+            <table class="table table-bordered datatable-header-footer">
               {% if variants %}
                 <thead>
-                  <tr>
+               
+                  <tr class="bg-primary">
                     <th class="bulk-checkbox">
                       <input type="checkbox" id="select-all-variants" class="filled-in select-all switch-actions">
                       <label for="select-all-variants"></label>
@@ -278,12 +360,11 @@
                     <th class="wide">
                       {% trans "Variant name" context "Product variant table header" %}
                     </th>
-                    <th class="right-align">
-                      {% trans "Tax" context "Product variant table header" %}
-                    </th>
+                    
                     <th class="right-align">
                       {% trans "Price" context "Product variant table header" %}
                     </th>
+                    <th class="text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -304,12 +385,20 @@
                       <td>
                         {{ variant.name }}
                       </td>
-                      <td>
-                        {{ variant.tax_override }} %
-                      </td>
+                     
                       <td class="right-align">
                         {% gross variant.get_price_per_item html=True %}
                       </td>
+                      <!-- actions -->
+                    <td class="text-center">
+                      <ul class="icons-list">
+                        <li><a href="{% url 'dashboard:variant-update' product_pk=product.pk variant_pk=variant.pk %}"><i class="icon-pencil7" data-popup="tooltip" tite='Edit product' data-placement="bottom" data-original-title="Edit me"></i></a></li>
+                        <li>
+                   
+                        </li>
+                       
+                      </ul>
+                    </td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -326,22 +415,39 @@
               {% endif %}
             </table>
           </div>
-          <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}#variants">
+          <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}?tab=variants">
         </form>
       </div>
     {% endif %}
-    <div id="stock" class="card tab-content">
+    {% endif %}
+                    </div>
+                    <!-- end product variant -->
+                    <!-- product stock -->
+                    {% if request.GET.tab == 'variant'  %}                   
+                     <div class="tab-pane has-padding active" id="stock-tab">
+                    {% else %}
+                     <div class="tab-pane has-padding" id="stock-tab">            
+                    {% endif %}
+                    
+                     {% if product.pk %}
+                      <div id="stock" class="card">
       <form method="post" action="{% url 'dashboard:stock-bulk-delete' product_pk=product.pk %}" novalidate>
         {% csrf_token %}
-        <div class="data-table-header-action">
-          <a href="{% url 'dashboard:product-stock-add' product_pk=product.pk %}" class="btn-data-table btn-show-when-unchecked btn-flat">
+        <div class="data-table-header-action" style="padding: 8px;">
+          <a href="{% url 'dashboard:product-stock-add' product_pk=product.pk %}" class="btn-data-table btn-show-when-unchecked btn btn-primary">
             {% trans "Add" context "Product form stock tab table action" %}
           </a>
-          <a href="#modal-product-stock-delete" class="modal-trigger btn-data-table btn-show-when-checked btn-flat" style="display:none" hidden>
+          <a href="#modal-product-stock-delete" class=" btn-data-table btn-show-when-checked btn btn-danger" data-toggle="modal"  data-target="#modal-product-stock-delete"  style="display:none" hidden>
             {% trans "Delete" context "Dashboard delete action" %}
           </a>
-          <div class="modal" id="modal-product-stock-delete">
+          <div class="modal fade" id="modal-product-stock-delete">
+          <div class="modal-dialog">
             <div class="modal-content">
+              <div class="modal-header bg-blue">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title text-white">Delete Stock</h6>
+              </div>
+            <div class="modal-body">
               <h5>
                 {% trans "Are you sure?" context "Dashboard confirmation modal" %}
               </h5>
@@ -351,21 +457,27 @@
                 {% endblocktrans %}
               </p>
             </div>
-            <div class="modal-footer">
-              <button type="submit" class="modal-action btn-flat">
-                {% trans "Delete" context "Dashboard delete action" %}
-              </button>
-              <a href="#!" class="modal-action modal-close btn-flat">
-                {% trans "Cancel" context "Dashboard cancel action" %}
-              </a>
+            <!-- end modal body -->
+              <div class="modal-footer">
+                <button type="submit" class="modal-action btn btn-danger">
+                  {% trans "Delete" context "Dashboard delete action" %}
+                </button>
+                <a href="#!" class="modal-action modal-close  btn btn-link ">
+                  {% trans "Cancel" context "Dashboard cancel action" %}
+                </a>
+              </div>
+            <!-- end footer -->
             </div>
+            </div>
+            <!-- end dialog -->            
           </div>
+          <!-- end modal -->
         </div>
         <div class="data-table-container">
-          <table class="bordered highlight responsive data-table">
+          <table class="table table-bordered datatable-header-footer responsive data-table">
             {% if stock_items %}
             <thead>
-              <tr>
+              <tr bg-primary>
                 <th class="bulk-checkbox">
                   <input type="checkbox" id="select-all-stock" class="filled-in select-all switch-actions">
                   <label for="select-all-stock"></label>
@@ -382,13 +494,14 @@
                 <th class="right-align">
                   {% trans "Allocated" context "Stock table header" %}
                 </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for item in stock_items %}
                 <tr data-action-go="{% url 'dashboard:product-stock-update' product_pk=product.pk stock_pk=item.pk %}" title="{% trans "Edit variant" context "Stock table action" %}">
                   <td class="bulk-checkbox ignore-link">
-                    <input name="items" type="checkbox" id="{{ item.id }}" class="filled-in switch-actions" value="{{ item.id }}">
+                    <input name="items" type="checkbox" id="{{ item.id }}" class="filled-in switch-actions switch-stock" value="{{ item.id }}">
                     <label for="{{ item.id }}"></label>
                   </td>
                   <td>
@@ -402,6 +515,9 @@
                   </td>
                   <td class="right-align">
                     {{ item.quantity_allocated }}
+                  </td>
+                  <td>
+                    <a href="{% url 'dashboard:product-stock-update' product_pk=product.pk stock_pk=item.pk %}"><i class="icon-pencil7" data-popup="tooltip" tite='Edit product' data-placement="bottom" data-original-title="Edit me">Edit</i></a>
                   </td>
                 </tr>
               {% endfor %}
@@ -419,66 +535,85 @@
             {% endif %}
           </table>
         </div>
-        <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}#stock">
+        <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}?tab=stock">
       </form>
     </div>
-    <div id="images" class="tab-content">
-      <form action="{% url 'dashboard:product-images-upload' product_pk=product.pk %}" class="dropzone" id="product-image-form" novalidate>
+    {% endif %}
+                    </div>
+                    <!-- end product stock -->
+                    <!-- IMAGES tAB -->
+                    {% if request.GET.tab == 'images'  %}                   
+                     <div class="tab-pane has-padding active" id="images-tab">
+                    {% else %}
+                      <div class="tab-pane has-padding" id="images-tab">            
+                    {% endif %}
+                    
+                     {% if product.pk %}
+                         <div id="images" class="">
+      <form action="{% url 'dashboard:product-images-upload' product_pk=product.pk %}" class="" id="product-image-form" novalidate>
         <div class="dz-message"></div>
         {% csrf_token %}
-        <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}#images">
+        <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}?tab=images">
+        
         <div class="row">
-          {% if images %}
-            <ul class="product-gallery" id="product-gallery" data-post-url="{% url 'dashboard:product-images-reorder' product_pk=product.pk %}">
+          <div class="col-md-12">
+            <div class="text-left" style="margin-bottom: 8px;">
+              <a class="btn btn-primary  waves-effect waves-light " id="images-bt" href="{% url 'dashboard:product-image-add' product_pk=product.pk %}" title=""> Add Image 
+                 </a>
+            </div>
+          </div>
+          {% if images %}    
+            
               {% for image in images %}
-                <li class="col s6 m3 product-gallery-item" data-id="{{ image.pk }}">
-                  <div class="row">
-                    <div class="card">
-                      <div class="card-image product-gallery-item-image">
-                        <img class="responsive-img" 
+              <div class="col-lg-3 col-sm-6">
+              <div class="thumbnail">
+                <div class="thumb">
+                  <img class="" 
                              src="{{ image.image.crop.255x255 }}" 
                              srcset="{{ image.image.crop.255x255 }} 1x, {{ image.image.crop.510x510 }} 2x"
                              alt="">
-                      </div>
-                      <div class="card-content">
-                        <span class="product-gallery-item-title card-title black-text" title="{{ image.alt }}">
-                          {% if image.alt %}
+                  <div class="caption-overflow">
+                    <span>
+                      <a href="{{ image.image.crop.255x255 }}" data-popup="lightbox" class="btn border-white text-white btn-flat btn-icon btn-rounded"><i class="icon-plus3"></i></a>
+                      <a href="{% url 'dashboard:product-image-update' product_pk=product.pk img_pk=image.pk %}" class="btn border-white text-white btn-flat btn-icon btn-rounded ml-5"><i class="icon-pencil7"></i></a>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="caption">
+                  <h6 class="no-margin-top text-semibold"> <a href="{% url 'dashboard:product-image-update' product_pk=product.pk img_pk=image.pk %}" class="text-muted"><i class="icon-pencil pull-right"></i></a></h6>
+                  {% if image.alt %}
                             {{ image.alt }}
                           {% else %}
-                            <span class="grey-text">
+                            <span class="">
                               {% trans "No description" context "Image card text" %}
                             </span>
                           {% endif %}
-                        </span>
-                      </div>
-                      <div class="sortable__drag-area"></div>
-                      <div class="card-action">
+                <div class="card-action">
                         <a class="btn btn-flat" href="{% url 'dashboard:product-image-update' product_pk=product.pk img_pk=image.pk %}">
                           {% trans "Edit" context "Dashboard edit action" %}
                         </a>
-                        <a href="#base-modal" class="btn btn-flat modal-trigger-custom" data-href="{% url 'dashboard:product-image-delete' product_pk=product.pk img_pk=image.pk %}">
+                        <a href="#modal_instance" class="btn btn-flat modal-trigger " data-title='Delete Image' data-href="{% url 'dashboard:product-image-delete' product_pk=product.pk img_pk=image.pk %}">
                           {% trans "Delete" context "Dashboard delete action" %}
                         </a>
                       </div>
-                    </div>
-                  </div>
-                </li>
+                </div>
+              </div>
+            </div>
+               
               {% endfor %}
-            </ul>
+            
         {% else %}
           <p class="no-images">
             {% trans "This product has no images yet." context "Empty image gallery message" %}
           </p>
         {% endif %}
-        <div class="col s6 m3 product-gallery-item dropzone-message">
-          <div class="row">
-            <span class="product-gallery-item-title product-gallery-item-title--noclip card-title black-text">
-              <span class="grey-text hide-on-med-and-down">
-                {% trans "Drop images here to upload" context "Image gallery upload box text" %}
-              </span>
-            </span>
+        <div class="col-md-12">
+          <div class="text-right">
+            <a class="btn btn-primary  waves-effect waves-light " id="images-bt" href="{% url 'dashboard:product-image-add' product_pk=product.pk %}" title=""> Add Image 
+               </a>
           </div>
-        </div>
+          </div>
       </div>
       </form>
       <script type="application/template" id="template">
@@ -513,10 +648,95 @@
         </li>
       </script>
     </div>
-    <div class="fixed-action-btn">
-      <a class="btn-fab btn-fab-hidden btn-floating btn-large waves-effect waves-light teal" id="images-btn" href="{% url 'dashboard:product-image-add' product_pk=product.pk %}" title="{% trans "Add image" context "Add image button text" %}">
-        <svg data-src="{% static "dashboard/images/add.svg" %}" />
-      </a>
-    </div>
-  {% endif %}
+    {% endif %}
+                     </div>
+                    <!-- END IMAGES TAB -->
+                    
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>                
+</div>
+ 
+ {% include "dashboard/includes/_modal_images.html"  %}
 {% endblock %}
+
+ {% block custom_js %}
+
+
+ <script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/uniform.min.js' %}"></script>
+
+  <script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/switch.min.js' %}"></script>
+
+
+<script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/uniform.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/plugins/ui/moment/moment.min.js' %}"></script>
+ 
+ 
+  <script type="text/javascript" src="{% static 'backend/js/plugins/pickers/pickadate/picker.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/plugins/pickers/pickadate/picker.date.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/plugins/pickers/pickadate/picker.time.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/pages/form_multiselect.js' %}"></script>
+    <script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_select.min.js' %}"></script>
+
+  <script type="text/javascript" >
+
+     // Dropdown selectors
+    $('.pickadate-selectors').pickadate({
+        format: 'dd/mm/yyyy',
+        editable: true,  
+        selectYears: true,
+        selectMonths: true,
+        formatSubmit: 'dd/mm/yyyy',
+
+    });
+     // Checkboxes/radios (Uniform)
+    // ------------------------------
+
+    // Default initialization
+    $(".styled, .multiselect-container input").uniform({
+        radioClass: 'choice'
+    });
+
+    // Basic select
+    $('.bootstrap-select').selectpicker();
+  </script>
+  <script>
+  $( "select[name*='product_cls']").change(function() {
+  // Check input( $( this ).val() ) for validity here
+  
+   {% url "dashboard:fetch-variants" as url %} 
+   var url = "{{ url }}";
+   var class_pk = $( this ).val();
+   var posting = $.post( url, {class_pk:class_pk} );
+     // Put the results in a div
+  posting.done(function( data ) {    
+    $( "#div_attributes" ).empty().append( data );
+  
+  });
+
+   });
+
+
+  $('.switch-actions').on('change', function() {
+  let $btnChecked = $(this).parents('form').find('.btn-show-when-checked');
+  let $btnUnchecked = $(this).parents('form').find('.btn-show-when-unchecked');
+  if ($(this).parents('form').find('.switch-actions:checked').length) {
+    $btnChecked.show();
+    $btnUnchecked.hide();
+  } else {
+    $btnUnchecked.show();
+    $btnChecked.hide();
+  }
+});
+  </script>
+<script type="text/javascript" src="{% static 'backend/js/backend.js' %}"></script>
+{% if product.pk %}
+<script type="text/javascript" src="{% static 'backend/js/plugins/media/fancybox.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/pages/gallery.js' %}"></script>
+{% endif %}
+ {% endblock %}}
+}

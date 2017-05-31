@@ -5,7 +5,7 @@ from versatileimagefield.widgets import (ClearableFileInputWithImagePreview,
 
 class ImagePreviewFileInput(ClearableFileInputWithImagePreview):
     template_with_initial_and_imagepreview = """
-    <div class="sizedimage-mod preview">
+    <div class="sizedimage-mod preview hidden">
         <div class="image-wrap outer">
             <div class="point-stage" id="%(point_stage_id)s"
                  data-image_preview_id="%(image_preview_id)s">
@@ -20,6 +20,6 @@ class ImagePreviewFileInput(ClearableFileInputWithImagePreview):
 
 class ImagePreviewWidget(SizedImageCenterpointWidgetMixIn, MultiWidget):
     def __init__(self, attrs=None):
-        widgets = (ImagePreviewFileInput(attrs={'class': 'file-chooser'}),
-                   HiddenInput(attrs={'class': 'ppoi-input'}))
+        widgets = (ImagePreviewFileInput(attrs={'class': 'file-styled'}),
+                   HiddenInput(attrs={'class': 'ppoi-input hidden'}))
         super(ImagePreviewWidget, self).__init__(widgets, attrs)

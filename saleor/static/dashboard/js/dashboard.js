@@ -24,7 +24,7 @@ function onScroll(func) {
 new SVGInjector().inject(document.querySelectorAll('svg[data-src]'));
 
 function openModal() {
-  $('.modal-trigger-customsdf').on('click', function (e) {
+  $('.modal-trigger-custom').on('click', function (e) {
     let that = this;
     $.ajax({
       url: $(this).data('href'),
@@ -35,7 +35,7 @@ function openModal() {
         initSelects();
         $modal.modal();
       }
-     });
+    });
 
     e.preventDefault();
   });
@@ -67,7 +67,7 @@ $(document).ready(function() {
     });
   }
   initSelects();
-  $('.modalssdf').modal();
+  $('.modal').modal();
 
   let $tabs = $('ul.tabs');
   if ($tabs.length) {
@@ -108,7 +108,7 @@ $(document).ready(function() {
           $(that).parent().html(response.responseText);
           initSelects();
         } else {
-          $('.modal-closesdf').click();
+          $('.modal-close').click();
         }
       },
       success: function(response) {
@@ -234,7 +234,7 @@ $('.datepicker').pickadate({
 });
 
 function initSelects() {
-  $('select12:not(.browser-default):not([multiple])').material_select();
+  $('select:not(.browser-default):not([multiple])').material_select();
   $('select[multiple]:not(.browser-default)').select2({width: '100%'});
 }
 // Clickable rows in dashboard tables

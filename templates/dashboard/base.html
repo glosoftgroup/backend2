@@ -16,19 +16,9 @@
     {% endblock meta %}
 
     {% include 'favicon.html' %}
-    {% render_bundle 'vendor' 'css' %}
-    {% render_bundle 'dashboard' 'css' %}
-    <style type="text/css">
-    .modal .modal-content {padding: 0px;}
-    .modal {
-        width:auto;
-        background-color: rgba(249, 246, 246, 0);
-        max-height: 100%;    
-         }      
-    .modal-content { padding: 0px;   }
-    label { font-size: 1.8rem;}
-    </style>
-    <link rel="stylesheet" type="text/css" href="{% static "versatileimagefield/css/versatileimagefield.css" %}">
+    
+    
+   
     
 
     <!-- Global stylesheets -->
@@ -263,36 +253,36 @@ margin-bottom: 0;">
     <!-- end page content -->
   </div>
   <!-- end page container -->
-  
+
    
-    <!-- 
+   
     <div id="base-modal" class="modal"></div>
-    <div id="base-modal-fixed" class="modal modal-fixed-footer"></div> -->
+    <div id="base-modal-fixed" class="modal modal-fixed-footer"></div>
     <!-- Core JS files -->
-  <script type="text/javascript" src="{% static 'backend/js/core/libraries/jquery.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/jquery-1.11.3.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/core/libraries/bootstrap.min.js' %}"></script>
   <!-- /core JS files -->
 
   <!-- Theme JS files -->
   <script type="text/javascript" src="{% static 'backend/js/core/app.js' %}"></script>
-
+  
   <script type="text/javascript" src="{% static 'backend/js/plugins/ui/ripple.min.js' %}"></script>
   <!-- /theme JS files -->
- <script type="text/javascript" src="{% static 'backend/js/backend.js' %}"></script>
+ 
   <!-- form js -->
     <script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/select2.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/uniform.min.js' %}"></script>
+  
   <script type="text/javascript" src="{% static 'backend/js/plugins/loaders/blockui.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'backend/js/pages/form_layouts.js' %}"></script><script type="text/javascript" src="{% static 'backend/js/pages/form_layouts.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/pages/form_layouts.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/uniform.min.js' %}"></script>
 
     <!-- Core Scripts - Include with every page -->
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
-    {% render_bundle 'vendor' 'js' %}
-    {% render_bundle 'dashboard' 'js' %}
+    
    
-    <script src="{% static "versatileimagefield/js/versatileimagefield.js" %}"></script>
+    
     {% include "dashboard/includes/_messages.html" %}
-
+   
     {% block custom_js %}{% endblock %}
    </div>
   </body>

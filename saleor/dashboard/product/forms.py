@@ -31,7 +31,7 @@ class ProductClassSelectorForm(forms.Form):
         super(ProductClassSelectorForm, self).__init__(*args, **kwargs)
         choices = [(obj.pk, obj.name) for obj in product_classes]
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['class'] = 'form-control bootstrap-select'
         if len(product_classes) > self.MAX_RADIO_SELECT_ITEMS:
             widget = forms.Select
         else:
@@ -39,6 +39,9 @@ class ProductClassSelectorForm(forms.Form):
         self.fields['product_cls'] = forms.ChoiceField(
             label=pgettext_lazy('Product class form label', 'Product type'),
             choices=choices, widget=widget)
+        field = self.fields['product_cls'] 
+        field.widget.attrs['class'] = 'form-control bootstrap-select'
+
 
 
 class StockForm(forms.ModelForm):
@@ -57,6 +60,12 @@ class StockForm(forms.ModelForm):
             initial = None
         self.fields['variant'] = forms.ModelChoiceField(
             queryset=product.variants, initial=initial)
+        field = self.fields['variant'] 
+        field.widget.attrs['class'] = 'form-control bootstrap-select'
+
+        field = self.fields['location'] 
+        field.widget.attrs['class'] = 'form-control bootstrap-select'
+
 
 
 class ProductClassForm(forms.ModelForm):
@@ -115,12 +124,25 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+        field = self.fields['is_featured'] 
+        field.widget.attrs['class'] = 'styled' 
+
+        field = self.fields['available_on'] 
+        field.widget.attrs['class'] = 'form-control pickadate-selectors'
+         
+
         field = self.fields['name']
         field.widget.attrs['placeholder'] = pgettext_lazy(
             'Product form placeholder', 'Give your awesome product a name')
-        field = self.fields['categories']
+        field = self.fields['categories']        
         field.widget.attrs['data-placeholder'] = pgettext_lazy(
             'Product form placeholder', 'Search')
+        field.widget.attrs['class'] = 'form-control multiselect'
+        field.widget.attrs['multiple'] = 'multiple'         
+
+        field = self.fields['product_tax']
+        field.widget.attrs['class'] = 'form-control bootstrap-select'
         product_class = self.instance.product_class
         self.product_attributes = product_class.product_attributes.all()
         self.product_attributes = self.product_attributes.prefetch_related(
@@ -128,14 +150,15 @@ class ProductForm(forms.ModelForm):
         self.prepare_fields_for_attributes()
 
     def prepare_fields_for_attributes(self):
-        for attribute in self.product_attributes:
-            field_defaults = {
+        for attribute in self.product_attributes:            
+            field_defaults = {               
                 'label': attribute.name,
                 'required': False,
                 'initial': self.instance.get_attribute(attribute.pk)}
             if attribute.has_values():
                 field = CachingModelChoiceField(
                     queryset=attribute.values.all(), **field_defaults)
+                field.widget.attrs['class'] = 'form-control bootstrap-select'
             else:
                 field = forms.CharField(**field_defaults)
             self.fields[attribute.get_formfield_name()] = field
@@ -168,6 +191,9 @@ class ProductVariantForm(forms.ModelForm):
         if self.instance.product.pk:
             self.fields['price_override'].widget.attrs[
                 'placeholder'] = self.instance.product.price.gross
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+        
 
 
 class CachingModelChoiceIterator(ModelChoiceIterator):
@@ -205,6 +231,8 @@ class VariantAttributeForm(forms.ModelForm):
             else:
                 field = forms.CharField(**field_defaults)
             self.fields[attr.get_formfield_name()] = field
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
     def save(self, commit=True):
         attributes = {}
@@ -253,7 +281,14 @@ class ProductImageForm(forms.ModelForm):
             variants.initial = self.instance.variant_images.values_list(
                 'variant', flat=True)
         if self.instance.image:
-            self.fields['image'].widget = ImagePreviewWidget()
+            field = self.fields['image']
+            field.widget.attrs['class'] = 'file-styled'
+        field = self.fields['alt'] 
+        field.widget.attrs['class'] = 'form-control'
+
+        field = self.fields['variants']
+        field.widget.attrs['class'] = 'styled'
+
 
     @transaction.atomic
     def save_variant_images(self, instance):

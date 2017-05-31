@@ -16,7 +16,7 @@
 
 {% block header_menu %}
   {% url "dashboard:product-update" pk=product.pk as url %}
-  {% include "dashboard/includes/_back-link.html" with url=url hash="#variants" %}
+  {% include "dashboard/includes/_back-link.html" with url=url hash="?tab=variants" %}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -28,7 +28,7 @@
     </li>
    
     <li>
-      <a href="{% url "dashboard:product-update" pk=product.pk %}#variants" class="">
+      <a href="{% url "dashboard:product-update" pk=product.pk %}?tab=variants" class="">
         {{ product }}
       </a>
     </li>
@@ -56,7 +56,7 @@
 {% block menu_catalogue_class %} active{% endblock %}
 
 {% block content %}
-  <div class="row">
+  <div class="">
     <div class="col s12 m9">
       <div class="">
        
@@ -64,7 +64,7 @@
  <form method="post" id="form-variant" enctype="multipart/form-data">
           <div class="card-content">
             {% csrf_token %}
-            <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}#variants">
+            <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}?tab=variants">
   <div class="panel panel-flat">
     <div class="panel-heading">
       <h5 class="panel-title">Product Variant</h5>
@@ -79,6 +79,16 @@
 
     <div class="panel-body">
       <div class="row">
+      {% if errors %}
+      <div class="alert alert-styled alert-danger">
+         {{ errors }}
+      </div>
+      {% endif %}
+      {% if form_errors %}
+       <div class="alert alert-styled alert-danger">
+         {{ form_errors }}
+        </div>
+      {% endif %}
         <div class="col-md-6">
           <fieldset>
             <legend class="text-semibold"></legend>
@@ -91,7 +101,7 @@
               <label>Product Attributes:</label>
               {% if attribute_form.fields %}
                   {% for attribute_field in attribute_form %}
-                    <div class="row">
+                    <div class="">
                       {{ attribute_field|materializecss }}
                     </div>
                   {% endfor %}
@@ -115,17 +125,15 @@
                 </div>
               </div> 
                <div class="col-md-6">
-                <div class="form-group">                 
-                   {{ form.tax_override|materializecss }}
+                 <div class="form-group">                  
+                    {{ form.price_override|materializecss }}
                 </div>
               </div>             
             </div>
 
             <div class="row">
               <div class="col-md-12">
-                <div class="form-group">                  
-                    {{ form.price_override|materializecss }}
-                </div>
+                
               </div>
             </div>
            
@@ -137,14 +145,14 @@
 
       <div class="text-right">
         {% if variant.pk %}
-              <a href="{% url "dashboard:product-update" pk=product.pk %}#variants" class="btn btn-flat">
+              <a href="{% url "dashboard:product-update" pk=product.pk %}?tab=variants" class="btn btn-flat">
                 {% trans "Cancel" context "Dashboard cancel action" %}
               </a>
               <button type="submit" class="btn waves-effect waves-light"><i class="icon-arrow-right14 position-right"></i>
                 {% trans "Update" context "Dashboard update action" %}
               </button>
             {% else %}
-              <a href="{% url "dashboard:product-update" pk=product.pk %}#variants" class="btn btn-flat">
+              <a href="{% url "dashboard:product-update" pk=product.pk %}?tab=variants" class="btn btn-flat">
                 {% trans "Cancel" context "Dashboard cancel action" %}
               </a>
               <button type="submit" class="btn waves-effect waves-light"><i class="icon-arrow-right14 position-right"></i>

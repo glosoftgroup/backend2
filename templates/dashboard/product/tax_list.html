@@ -84,5 +84,9 @@
 	  {% endif %}
       </div>
       {% include "dashboard/includes/_modal.html"  %}
+     {% endblock %} 
+{% load static %}
+{% block custom_js %}
 
+<script type="text/javascript" src="{% static 'backend/js/backend.js' %}"></script>
 {% endblock %}

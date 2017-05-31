@@ -114,6 +114,8 @@ class ProductTax(models.Model):
         max_length=128, blank=True)
     tax = models.IntegerField( pgettext_lazy('Product Tax', 'tax %'),
         validators=[MinValueValidator(0)], default=Decimal(0)) 
+    def __str__(self):
+        return str(self.tax)
 
 class ProductManager(models.Manager):
 
@@ -141,8 +143,7 @@ class Product(models.Model, ItemRange, index.Indexed):
     price = PriceField(
         pgettext_lazy('Product field', 'price'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2)
-    tax = models.IntegerField( pgettext_lazy('Variant Tax', 'tax %'),
-        validators=[MinValueValidator(0)], default=Decimal(0))
+    
     available_on = models.DateField(
         pgettext_lazy('Product field', 'available on'), blank=True, null=True)
     attributes = HStoreField(pgettext_lazy('Product field', 'attributes'),
@@ -232,8 +233,7 @@ class ProductVariant(models.Model, Item):
         pgettext_lazy('Product variant field', 'price override'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2,
         blank=True, null=True)
-    tax_override = models.IntegerField( pgettext_lazy('Tax', 'Tax'),
-        validators=[MinValueValidator(0)], default=Decimal(0))
+    
     product = models.ForeignKey(Product, related_name='variants')
     attributes = HStoreField(
         pgettext_lazy('Product variant field', 'attributes'), default={})

@@ -14,6 +14,7 @@ from ...product.models import (Product, ProductAttribute, ProductClass,
                                ProductImage, ProductVariant, Stock,
                                StockLocation, ProductTax)
 from ..views import staff_member_required
+from django.http import HttpResponse
 
 
 @staff_member_required
@@ -96,10 +97,38 @@ def product_list(request):
     ctx = {'form': form, 'products': products,
            'product_classes': product_classes}
     return TemplateResponse(request, 'dashboard/product/list.html', ctx)
-
-
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 @staff_member_required
-def product_create(request, class_pk):
+@csrf_exempt
+def fetch_variants(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            class_pk = request.POST.get("class_pk", "--")          
+    
+            product_class = get_object_or_404(ProductClass, pk=class_pk)
+            create_variant = not product_class.has_variants
+            product = Product()
+            product.product_class = product_class
+            product_form = forms.ProductForm(request.POST or None, instance=product)
+            if create_variant:
+                variant = ProductVariant(product=product)
+                variant_form = forms.ProductVariantForm(request.POST or None,
+                                                        instance=variant,
+                                                        prefix='variant')
+                variant_errors = not variant_form.is_valid()
+            else:
+                variant_form = None
+                variant_errors = False
+            ctx = {'variant_form':variant_form,'product_form':product_form }
+            return TemplateResponse(
+        request, 'dashboard/product/attributes.html', ctx)
+@staff_member_required
+def product_create(request, class_pk=1):
+    product_classes = ProductClass.objects.all()
+    form_classes = forms.ProductClassSelectorForm(
+        request.POST or None, product_classes=product_classes)
+    if form_classes.is_valid():
+        class_pk=form_classes.cleaned_data['product_cls']
     product_class = get_object_or_404(ProductClass, pk=class_pk)
     create_variant = not product_class.has_variants
     product = Product()
@@ -125,15 +154,24 @@ def product_create(request, class_pk):
         messages.success(request, msg)
         return redirect('dashboard:product-update',
                         pk=product.pk)
+    else:
+        errors = product_form.errors
 
-    ctx = {'product_form': product_form, 'variant_form': variant_form,
-           'product': product}
+        ctx = {'product_form': product_form, 'variant_form': variant_form,
+           'product': product,'form_classes':form_classes, 'errors':errors}
     return TemplateResponse(
         request, 'dashboard/product/product_form.html', ctx)
 
 
 @staff_member_required
 def product_edit(request, pk):
+    product_classes = ProductClass.objects.all()
+    form_classes = forms.ProductClassSelectorForm(
+        request.POST or None, product_classes=product_classes)
+    if form_classes.is_valid():
+        class_pk=form_classes.cleaned_data['product_cls']
+   
+
     product = get_object_or_404(
         Product.objects.prefetch_related(
             'images', 'variants'), pk=pk)
@@ -168,7 +206,8 @@ def product_edit(request, pk):
            'product': product, 'stock_delete_form': stock_delete_form,
            'stock_items': stock_items, 'variants': variants,
            'variants_delete_form': variants_delete_form,
-           'variant_form': variant_form}
+           'variant_form': variant_form,
+           'form_classes':form_classes}
     return TemplateResponse(
         request, 'dashboard/product/product_form.html', ctx)
 
@@ -205,7 +244,8 @@ def stock_edit(request, product_pk, stock_pk=None):
         success_url = request.POST.get('success_url', product_url)
         if is_safe_url(success_url, request.get_host()):
             return redirect(success_url)
-    ctx = {'form': form, 'product': product, 'stock': stock}
+    errors = form.errors
+    ctx = {'form': form, 'product': product, 'stock': stock, 'errors':errors}
     return TemplateResponse(request, 'dashboard/product/stock_form.html', ctx)
 
 
@@ -319,8 +359,10 @@ def variant_edit(request, product_pk, variant_pk=None):
         success_url = request.POST['success_url']
         if is_safe_url(success_url, request.get_host()):
             return redirect(success_url)
+    errors = attribute_form.errors
+    form_errors = form.errors
     ctx = {'attribute_form': attribute_form, 'form': form, 'product': product,
-           'variant': variant}
+           'variant': variant,'errors':errors,'form_errors':form_errors}
     return TemplateResponse(
         request, 'dashboard/product/variant_form.html', ctx)
 

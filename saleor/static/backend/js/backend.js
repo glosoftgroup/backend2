@@ -25,5 +25,16 @@ $(function() {
    
   });
 
-
+	$('#select-all-variants').click(function () {    
+	  $(':checkbox.switch-actions').prop('checked', this.checked);    
+	});
+	$('#select-all-stock').click(function () {    
+	  $(':checkbox.switch-stock').prop('checked', this.checked);    
+	});
+	
+// end scripts
 });
+// end main function
+
+
+
