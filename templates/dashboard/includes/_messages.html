@@ -2,9 +2,25 @@
   <script>
     {% for message in messages %}
       {% if 'safe' in message.tags %}
-        Materialize.toast('{{ message|safe|escapejs }}', 5000);
+      // notify 
+      function notify() {
+          new PNotify({
+              text: '{{ message|safe|escapejs }}',
+              addclass: 'bg-primary'
+          });
+      }
+      notify();    
+        
       {% else %}
-        Materialize.toast('{{ message|escapejs }}', 5000);
+        
+        // notify 
+         function notify () {
+            new PNotify({
+                text: '{{ message|escapejs }}',
+                addclass: 'bg-primary'
+            });
+        }
+        notify();
       {% endif %}
     {% endfor %}
   </script>
@@ -13,9 +29,25 @@
   <script>
     {% for message in form.non_field_errors %}
       {% if 'safe' in message.tags %}
-        Materialize.toast('{{ message|safe|escapejs }}', 5000);
+      // notify 
+         function  notify() {
+            new PNotify({
+                text: '{{ message|safe|escapejs }}',
+                addclass: 'bg-warning'
+            });
+        }
+      notify();
       {% else %}
-        Materialize.toast('{{ message|escapejs }}', 5000);
+      // notify 
+
+         function notify () {
+            new PNotify({
+                text: '{{ message|escapejs }}',
+                addclass: 'bg-warning'
+            });
+        }
+        notify();
+      
       {% endif %}
     {% endfor %}
   </script>

@@ -1,5 +1,5 @@
 <!-- Blue modal -->
-  <div id="modal_instance" class="modal fade">
+  <div id="modal_add_tax" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-blue">
@@ -13,19 +13,18 @@
           {% csrf_token %}
           {% if product.pk %}
            <input type="hidden" name="success_url" value="{% url 'dashboard:product-update' pk=product.pk %}?tab=images">
-          {% endif %}
-          <div class="">
-            <h5>
-              Are you sure?
-            </h5>
-            </div>
+           {% endif %}
+           
+          <div class="" id="add_tax_form">
+           
+           </div>
             
           </div>
         </div>
         
         <div class="modal-footer">
-          <button type="submit" id='modal_delete' class="btn  bg-danger">
-            <i class='text-white'>Delete</i>
+          <button onclick='return false' id='modal_add_tax_btn' class="btn  bg-primary">
+            <i class='text-white'>Add Tax</i>
           </button> 
           </form>
 

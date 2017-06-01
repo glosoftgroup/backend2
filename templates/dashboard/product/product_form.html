@@ -227,9 +227,14 @@
                       <div class="">
                         <div class="col-md-12">
                           
-                          <div class="form-group">
-                            <label>Tax: %</label>
+                          <div class="form-group" id='tax_field'>
+                            <label>Tax: % </label>
+                            <div class="input-group">
                             {{ product_form.product_tax }}
+                            <div class="input-group-btn">
+                              <button type="button" class="btn btn-info" id="add-new-tax">Add new</button>
+                            </div>
+                            </div>
                           </div>
                           <div class="form-group">
                             <label>Categories:</label>
@@ -423,7 +428,7 @@
                     </div>
                     <!-- end product variant -->
                     <!-- product stock -->
-                    {% if request.GET.tab == 'variant'  %}                   
+                    {% if request.GET.tab == 'stock'  %}                   
                      <div class="tab-pane has-padding active" id="stock-tab">
                     {% else %}
                      <div class="tab-pane has-padding" id="stock-tab">            
@@ -661,6 +666,7 @@
 </div>
  
  {% include "dashboard/includes/_modal_images.html"  %}
+ {% include "dashboard/includes/_modal_add_tax.html"  %}
 {% endblock %}
 
  {% block custom_js %}
@@ -681,9 +687,75 @@
   <script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/pages/form_multiselect.js' %}"></script>
     <script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_select.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'backend/js/core/libraries/jquery_ui/core.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/selectboxit.min.js' %}"></script>
 
   <script type="text/javascript" >
+  //
+    // Dynamic options
+    //
 
+    // Add options dynamically
+    $(".selectbox-dynamic-options").selectBoxIt({
+        autoWidth: false
+    });  
+    
+  
+  $( "#add-new-tax").on('click',function() {   
+   var taxvalue = $( this ).val();
+         
+      {% url "dashboard:tax-add-ajax" as url %} 
+      var url = "{{ url }}";
+      var posting = $.post( url, {} );
+      // Put the results in a div
+      posting.done(function( data ) {    
+      $("#add_tax_form" ).empty().append( data ); 
+      $('#modal_add_tax').modal(); 
+      });
+    
+   });
+
+  // submit add tax form
+  function notifyerror() {
+          new PNotify({
+              text: 'Enter a valid tax',
+              addclass: 'bg-danger'
+          });
+      }
+      
+  $('#modal_add_tax_btn').on('click',function(){
+    var tax = $('#id_tax').val();
+    var name = $('#id_name').val();
+    if(!$.isNumeric(tax)){ 
+      notifyerror();
+      return false; 
+    }
+
+    
+
+    // post form data using jquery
+    {% url "dashboard:tax-add-ajax" as url %} 
+    var url = "{{ url }}";    
+    var posting = $.post( url, {tax:tax,name:name} );
+    // $('#modal_add_tax').modal('hide');
+    posting.done(function( data ) { 
+      
+      $( "#add_tax_form" ).empty().append( data ); 
+      
+      if ($('#added').val() == 'added')
+       {
+         $('#modal_add_tax').modal('hide');
+         $('#tax_field').empty().append(data);
+       }else
+       {
+                 
+       $('#modal_add_tax').modal();
+       }
+     
+      });
+  });
+  // end tax form
      // Dropdown selectors
     $('.pickadate-selectors').pickadate({
         format: 'dd/mm/yyyy',
@@ -714,11 +786,9 @@
    var posting = $.post( url, {class_pk:class_pk} );
      // Put the results in a div
   posting.done(function( data ) {    
-    $( "#div_attributes" ).empty().append( data );
-  
-  });
+    $( "#div_attributes" ).empty().append( data );  });
 
-   });
+  });
 
 
   $('.switch-actions').on('change', function() {

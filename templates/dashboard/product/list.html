@@ -22,7 +22,7 @@
   {% if product_classes %}
     {% if product_classes|length > 1 %}
      <li >
-        <a class="btn btn-primary text-white btn-xs waves-effect waves-light modal-trigger" data-toggle="modal"  data-target="#modal_blue" href="#modal_blue" title="{% trans 'Add product' context 'Product list add button text' %}">
+        <a class="btn btn-primary text-white btn-xs waves-effect waves-light" href="{% url 'dashboard:product-add' %}" title="{% trans 'Add product' context 'Product list add button text' %}">
          Add Product
         </a>
       </li>

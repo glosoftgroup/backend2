@@ -132,6 +132,7 @@ def product_create(request, class_pk=1):
     product_class = get_object_or_404(ProductClass, pk=class_pk)
     create_variant = not product_class.has_variants
     product = Product()
+
     product.product_class = product_class
     product_form = forms.ProductForm(request.POST or None, instance=product)
     if create_variant:
@@ -504,6 +505,35 @@ def tax_list(request):
     return TemplateResponse(
         request, 'dashboard/product/tax_list.html',
         ctx)
+
+@staff_member_required
+@csrf_exempt
+def tax_add_ajax(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            product_tax = ProductTax()
+            formadd = ProductTaxForm(request.POST or None,
+                                  instance=product_tax)
+            if formadd.is_valid():
+                tax = formadd.save()
+                msg = pgettext_lazy(
+                    'Dashboard message', 'Added Tax') 
+                messages.success(request, msg)
+                product = Product()
+                class_pk = 1
+                product_class = get_object_or_404(ProductClass, pk=class_pk)
+                product.product_class = product_class
+                product_form = forms.ProductForm(request.POST or None, instance=product)
+                ctx = {'product_form':product_form,'added':'added' }
+                return TemplateResponse(
+                request, 'dashboard/includes/_tax_success.html',
+                ctx)
+            else:
+                ctx = {'tax':ProductTax.objects.all(),'form':formadd,'errors':formadd.errors}
+           
+            return TemplateResponse(
+                request, 'dashboard/includes/_tax_ajax_form.html',
+                ctx)
 
 @staff_member_required
 def tax_add(request):

@@ -79,6 +79,27 @@ class ProductClassForm(forms.ModelForm):
             'product_attributes': pgettext_lazy(
                 'Product class form label',
                 'Attributes common to all variants')}
+    def __init__(self, *args, **kwargs):       
+        super(ProductClassForm, self).__init__(*args, **kwargs)
+        field = self.fields['product_attributes'] 
+        field.widget.attrs['class'] = 'form-control multiselect'
+        field.widget.attrs['multiple'] = 'multiple'
+        
+        field = self.fields['name'] 
+        field.widget.attrs['class'] = 'form-control'
+
+        field = self.fields['is_shipping_required'] 
+        field.widget.attrs['class'] = 'form-styled'
+
+        field = self.fields['has_variants'] 
+        field.widget.attrs['class'] = 'form-styled'
+        
+        
+        field = self.fields['variant_attributes'] 
+        field.widget.attrs['class'] = 'form-control multiselect'
+        field.widget.attrs['multiple'] = 'multiple'
+
+
 
     def clean(self):
         data = super(ProductClassForm, self).clean()
@@ -142,7 +163,7 @@ class ProductForm(forms.ModelForm):
         field.widget.attrs['multiple'] = 'multiple'         
 
         field = self.fields['product_tax']
-        field.widget.attrs['class'] = 'form-control bootstrap-select'
+        field.widget.attrs['class'] = ' selectbox-dynamic-options'
         product_class = self.instance.product_class
         self.product_attributes = product_class.product_attributes.all()
         self.product_attributes = self.product_attributes.prefetch_related(

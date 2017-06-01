@@ -275,12 +275,12 @@ margin-bottom: 0;">
   <script type="text/javascript" src="{% static 'backend/js/plugins/loaders/blockui.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/pages/form_layouts.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/uniform.min.js' %}"></script>
-
+  <script type="text/javascript" src="{% static 'backend/js/plugins/notifications/pnotify.min.js' %}"></script>
+ 
     <!-- Core Scripts - Include with every page -->
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
-    
-   
-    
+      
+       
     {% include "dashboard/includes/_messages.html" %}
    
     {% block custom_js %}{% endblock %}
