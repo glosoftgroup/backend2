@@ -1,0 +1,105 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% load prices_i18n %}
+{% load materializecss %}
+{% load staticfiles %}
+{% load product_first_image from product_images %}
+{% block title %}
+ Purchase- {{ block.super }}
+{% endblock %}
+{% block breadcrumbs %}
+ 
+    <li class="active">
+      Purchase
+    </li>
+
+{% endblock %}
+{% block header_extra %}
+<li style='padding: 9px;'>
+	<a class="" href=""><i class="icon-plus"></i>
+	 Purchase item
+	</a>
+</li>
+{% endblock %}
+{% block menu_purchase_list %}active{% endblock %}
+{% block content %}
+<!-- Search field -->
+<div class="panel panel-flat">
+	<div class="panel-heading">
+		<h5 class="panel-title">Search Product</h5>
+		<div class="heading-elements">
+			<ul class="icons-list">
+        		<li><a data-action="collapse"></a></li>
+        		<li><a data-action="close"></a></li>
+        	</ul>
+    	</div>
+	</div>
+
+	<div class="panel-body">
+		<form action="#" class="main-search">
+			<div class="input-group content-group">
+				<div class="has-feedback has-feedback-left">
+					<input type="text" id='search_product' name='search_product' class="form-control input-xlg" value="" placeholder="Search product">
+					<div class="form-control-feedback">
+						<i class="icon-search4 text-muted text-size-base"></i>
+					</div>
+				</div>
+
+				<div class="input-group-btn">
+					<button type="submit" id='submit_search_product' onclick='return false' class="btn btn-primary btn-xlg">Search</button>
+				</div>
+			</div>
+
+			<div class="row search-option-buttons">
+				<div class="col-sm-6">
+					<ul class="list-inline list-inline-condensed no-margin-bottom">
+						<li class="dropdown">
+							<a href="search_images.html#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+								<i class="icon-stack2 position-left"></i> All categories <span class="caret"></span>
+							</a>
+
+							<ul class="dropdown-menu">
+								<li><a href="search_images.html#"><i class="icon-question7"></i> Getting started</a></li>
+								<li><a href="search_images.html#"><i class="icon-accessibility"></i> Registration</a></li>
+								<li><a href="search_images.html#"><i class="icon-reading"></i> General info</a></li>
+								<li><a href="search_images.html#"><i class="icon-gear"></i> Your settings</a></li>
+								<li><a href="search_images.html#"><i class="icon-graduation"></i> Copyrights</a></li>
+								<li class="divider"></li>
+								<li><a href="search_images.html#"><i class="icon-mail-read"></i> Contacting authors</a></li>
+							</ul>
+						</li>
+						<li><a href="search_images.html#" class="btn btn-link"><i class="icon-reload-alt position-left"></i> Refine your search</a></li>
+					</ul>
+				</div>
+
+				<div class="col-sm-6 text-right">
+					<ul class="list-inline no-margin-bottom">
+						<li><a href="search_images.html#" class="btn btn-link"><i class="icon-make-group position-left"></i> Browse website</a></li>
+						<li><a href="search_images.html#" class="btn btn-link"><i class="icon-menu7 position-left"></i> Advanced search</a></li>
+					</ul>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div id="search_results"></div>
+<!-- /search field -->
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript">
+	$( "#submit_search_product").on('click',function() {   
+    var search_product = $( "#search_product" ).val();
+         
+      {% url "dashboard:search-product" as url %} 
+      var url = "{{ url }}";
+      var posting = $.post( url, {search_product:search_product,'csrfmiddlewaretoken': '{{ csrf_token }}'} );
+      // Put the results in a div
+      posting.done(function( data ) {    
+      $("#search_results" ).empty().append( data ); 
+      // $('#modal_add_tax').modal(); 
+      });
+    
+   });
+</script>
+<script type="text/javascript" src="{% static 'backend/js/search.js' %}"></script>
+{% endblock %}

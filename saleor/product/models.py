@@ -375,6 +375,10 @@ class Stock(models.Model):
     @property
     def quantity_available(self):
         return max(self.quantity - self.quantity_allocated, 0)
+    def cost_priceAsData(self):
+        return self.cost_price
+    def varaintName(self):        
+        return self.variant.price_override;
 
 
 @python_2_unicode_compatible

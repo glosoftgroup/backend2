@@ -132,6 +132,10 @@
                     <li class="{% block menu_products_class %}{% endblock %}">
                     <a href="{% url 'dashboard:product-list' %}"><i class='icon-bag'></i>{% trans "Products" context "Dashboard products list" %}</a>
                     </li>
+                    <li class="{% block menu_purchase_list %}{% endblock %}">
+                    <a href="{% url 'dashboard:purchase-list' %}"><i class='icon-plus'></i>
+                    Purchase</a>
+                    </li>
                     <!-- categories -->
                      <li class="{% block menu_categories_class %}{% endblock %}">
                     <a href="{% url 'dashboard:category-list' %}"><i class='icon-package'></i> {% trans "Categories" context "Dashboard categories list" %}</a>

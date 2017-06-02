@@ -17,6 +17,7 @@ urlpatterns = [
         views.product_create, name='product-add'),
     url(r'^fetch_variants/$',
         views.fetch_variants, name='fetch-variants'),
+    # tax routes
     url(r'^tax/$',
         views.tax_list, name='tax-list'),
     url(r'^tax/add$',
@@ -27,6 +28,15 @@ urlpatterns = [
         views.tax_delete, name='tax-delete'),
     url(r'^tax/edit(?P<pk>[0-9]+)/$',
         views.tax_edit, name='tax-update'),
+    # end tax
+    # purchase routes
+    url(r'^purchase/$',
+        views.purchase_list, name='purchase-list'),
+    # end purchase routes
+    # search routes
+    url(r'^search_ajax/$',
+        views.search_product, name='search-product'),
+    # end search routes
     url(r'^classes/$',
         views.product_class_list, name='product-class-list'),
     url(r'^classes/add/$',

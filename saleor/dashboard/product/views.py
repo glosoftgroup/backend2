@@ -583,3 +583,23 @@ def tax_delete(request, pk):
     ctx = {'instance': instance}
     return TemplateResponse(
         request, 'dashboard/product/tax_list.html', ctx)
+
+# purchase views
+@staff_member_required
+def purchase_list(request):
+    form = forms.StockPurchaseForm(request)
+    ctx = {'stock': Stock.objects.all()}
+    return TemplateResponse(
+        request, 'dashboard/purchase/purchase_list.html',
+        ctx)
+@staff_member_required
+def search_product(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            search = request.POST.get("search_product", "--") 
+            product = Product()
+            product_results = Product.objects.filter(name__icontains=search)
+            ctx = {'product_results': product_results}
+            return TemplateResponse(
+        request, 'dashboard/purchase/includes/product_search_results.html',
+        ctx)

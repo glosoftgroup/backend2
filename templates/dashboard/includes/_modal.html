@@ -11,10 +11,14 @@
           <div class="">
           <form action="" class="delete_form" method="post" novalidate>
           {% csrf_token %}
-          <div class="">
-            <h5>
-              Are you sure?
-            </h5>
+          <div class="alert alert-warning alert-styled-left  alert-bordered">
+          <button class="close" type="button" data-dismiss="alert">
+              <span>×</span>
+              <span class="sr-only">Close</span>
+          </button>
+           
+             <span class="text-semibold"> Are you sure?</span>
+           
             </div>
             
           </div>

@@ -14,6 +14,12 @@ from ...product.models import (AttributeChoiceValue, Product, ProductAttribute,
 from .widgets import ImagePreviewWidget
 from ...search import index as search_index
 
+# purchase forms
+class StockPurchaseForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        exclude = ['quantity_allocated']
+
 class ProductTaxForm(forms.ModelForm):
     class Meta:
         model = ProductTax
@@ -43,7 +49,6 @@ class ProductClassSelectorForm(forms.Form):
         field.widget.attrs['class'] = 'form-control bootstrap-select'
 
 
-
 class StockForm(forms.ModelForm):
     class Meta:
         model = Stock
@@ -58,6 +63,7 @@ class StockForm(forms.ModelForm):
             initial = product.variants.first()
         else:
             initial = None
+
         self.fields['variant'] = forms.ModelChoiceField(
             queryset=product.variants, initial=initial)
         field = self.fields['variant'] 
@@ -84,7 +90,7 @@ class ProductClassForm(forms.ModelForm):
         field = self.fields['product_attributes'] 
         field.widget.attrs['class'] = 'form-control multiselect'
         field.widget.attrs['multiple'] = 'multiple'
-        
+
         field = self.fields['name'] 
         field.widget.attrs['class'] = 'form-control'
 
@@ -214,7 +220,6 @@ class ProductVariantForm(forms.ModelForm):
                 'placeholder'] = self.instance.product.price.gross
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
-        
 
 
 class CachingModelChoiceIterator(ModelChoiceIterator):

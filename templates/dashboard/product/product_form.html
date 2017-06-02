@@ -5,6 +5,7 @@
 {% load staticfiles %}
 {% load attributes %}
 
+
 {% block title %}
   {% if product.pk %}
     {{ product }}
@@ -178,26 +179,28 @@
                   <div class="col-md-6">
                     <fieldset>
                     
-                    <div class="form-group">
-                      {{ form_classes }}
-                    </div>
+                   
                       <div class="form-group">
                         <label>Product Name:</label>
                         {{ product_form.name}}
                       </div> 
                       <div class="form-group">
+                       {{ form_classes }}
+                      </div>
+                      <div class="form-group" id='div_attributes'>
+                        <label>Product Attributes</label>
+                         {% for attribute_field in product_form.iter_attribute_fields %}
+                         <div class="">
+                         <label>{{ attribute_field.label }}</label>
+                          {{ attribute_field }}
+                        </div>
+                        {% endfor %}
+                      </div>
+                      <div class="form-group">
                         <label>Product Description:</label>
                        {{ product_form.description }}
                       </div>                   
-                     <div class="form-group" id='div_attributes'>
-                        <label>Product Attributes</label>
-                       {% for attribute_field in product_form.iter_attribute_fields %}
-                       <div class="">
-                       <label>{{ attribute_field.label }}</label>
-                        {{ attribute_field }}
-                      </div>
-                      {% endfor %}
-                      </div>
+                    
                                           
                     </fieldset>
                   </div>
@@ -392,7 +395,7 @@
                       </td>
                      
                       <td class="right-align">
-                        {% gross variant.get_price_per_item html=True %}
+                {% gross variant.get_price_per_item html=True %}
                       </td>
                       <!-- actions -->
                     <td class="text-center">
@@ -482,7 +485,7 @@
           <table class="table table-bordered datatable-header-footer responsive data-table">
             {% if stock_items %}
             <thead>
-              <tr bg-primary>
+              <tr class='bg-primary'>
                 <th class="bulk-checkbox">
                   <input type="checkbox" id="select-all-stock" class="filled-in select-all switch-actions">
                   <label for="select-all-stock"></label>
@@ -490,6 +493,11 @@
                 <th>
                   {% trans "SKU" context "Stock table header" %}
                 </th>
+                <th> Cost Price</th>
+                <th>
+                  Sales Price
+                </th>
+                
                 <th class="wide">
                   {% trans "Location" context "Stock table header" %}
                 </th>
@@ -510,8 +518,19 @@
                     <label for="{{ item.id }}"></label>
                   </td>
                   <td>
-                    {{ item.variant.sku }}
+                    {{ item.variant.sku }}                    
                   </td>
+                  <!-- cost price -->
+                  <td>
+                    {% if item.cost_price %}
+                     {% gross item.cost_price %}
+                    {% endif %}   
+                  </td>
+                  <!-- sales price -->
+                  <td> 
+                  {% gross item.variant.get_price_per_item html=True %}
+                  </td>
+                  
                   <td>
                     {{ item.location }}
                   </td>
@@ -737,7 +756,8 @@
     // post form data using jquery
     {% url "dashboard:tax-add-ajax" as url %} 
     var url = "{{ url }}";    
-    var posting = $.post( url, {tax:tax,name:name} );
+    // var csrf_token = "{% csrf_token %}";
+    var posting = $.post( url, {tax:tax,name:name,} );
     // $('#modal_add_tax').modal('hide');
     posting.done(function( data ) { 
       
@@ -758,11 +778,11 @@
   // end tax form
      // Dropdown selectors
     $('.pickadate-selectors').pickadate({
-        format: 'dd/mm/yyyy',
+        format: 'yyyy-dd-mm',
         editable: true,  
         selectYears: true,
         selectMonths: true,
-        formatSubmit: 'dd/mm/yyyy',
+        formatSubmit: 'yyyy-dd-mm',
 
     });
      // Checkboxes/radios (Uniform)
