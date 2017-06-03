@@ -22,8 +22,8 @@
   {% if product_classes %}
     {% if product_classes|length > 1 %}
      <li >
-        <a class="btn btn-primary text-white btn-xs waves-effect waves-light" href="{% url 'dashboard:product-add' %}" title="{% trans 'Add product' context 'Product list add button text' %}">
-         Add Product
+        <a class="" style="box-shadow: 0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.18);" href="{% url 'dashboard:product-add' %}" title="{% trans 'Add product' context 'Product list add button text' %}">
+         <i class="icon-plus3 position-left"></i>Add Product
         </a>
       </li>
       {% else %}
@@ -56,7 +56,11 @@
 {% block menu_catalogue_class %} active{% endblock %}
 
 {% block content %}
-  <div class="row">
+<div class="">
+{% include "dashboard/includes/_product_filter.html"  %}
+</div>
+<div class="clearfix"></div>
+  <div class="" id="search_results">
     <div class="col s12">
    
       {% if products %}      

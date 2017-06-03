@@ -124,7 +124,7 @@ def fetch_variants(request):
         request, 'dashboard/product/attributes.html', ctx)
 @staff_member_required
 def product_create(request, class_pk=1):
-    product_classes = ProductClass.objects.all()
+    product_classes = ProductClass.objects.order_by('pk')
     form_classes = forms.ProductClassSelectorForm(
         request.POST or None, product_classes=product_classes)
     if form_classes.is_valid():
@@ -166,11 +166,11 @@ def product_create(request, class_pk=1):
 
 @staff_member_required
 def product_edit(request, pk):
-    product_classes = ProductClass.objects.all()
-    form_classes = forms.ProductClassSelectorForm(
-        request.POST or None, product_classes=product_classes)
-    if form_classes.is_valid():
-        class_pk=form_classes.cleaned_data['product_cls']
+    # product_classes = ProductClass.objects.all()
+    # form_classes = forms.ProductClassSelectorForm(
+    #     request.POST or None, product_classes=product_classes)
+    # if form_classes.is_valid():
+    #     class_pk=form_classes.cleaned_data['product_cls']
    
 
     product = get_object_or_404(
@@ -208,7 +208,7 @@ def product_edit(request, pk):
            'stock_items': stock_items, 'variants': variants,
            'variants_delete_form': variants_delete_form,
            'variant_form': variant_form,
-           'form_classes':form_classes}
+           }
     return TemplateResponse(
         request, 'dashboard/product/product_form.html', ctx)
 

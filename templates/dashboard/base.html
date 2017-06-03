@@ -219,6 +219,7 @@ margin-bottom: 0;">
                {% block breadcrumbs %}
               <li class="active">{% trans "Home" context "Dashboard homepage" %}</li>
                {% endblock %}
+              
             </ul>
 
             <ul class="breadcrumb-elements">
@@ -280,7 +281,7 @@ margin-bottom: 0;">
   <script type="text/javascript" src="{% static 'backend/js/pages/form_layouts.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/uniform.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/notifications/pnotify.min.js' %}"></script>
- 
+ <script type="text/javascript" src="{% static 'backend/js/search.js' %}"></script>
     <!-- Core Scripts - Include with every page -->
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
       

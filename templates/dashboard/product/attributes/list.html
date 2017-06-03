@@ -12,40 +12,51 @@
 {% block menu_attributes_class %}active{% endblock %}
 
 {% block header_extra %}
-  <div class="fixed-action-btn">
-    <a class="btn-fab btn-floating btn-large waves-effect waves-light teal" href="{% url 'dashboard:product-attribute-add' %}" title="{% trans "Add attribute" context "Attribute list add button text" %}">
-      <svg data-src="{% static "dashboard/images/add.svg" %}" />
-    </a>
-  </div>
+ <li>              
+    <a href="{% url 'dashboard:product-attribute-add' %}"><i class="icon-plus3 position-left"></i> Add attribute</a></li>
+  
 {% endblock %}
 
 {% block breadcrumbs %}
-  <ul class="breadcrumbs">
-    <li class="visible-s">
+  
+    <li class="active">
       {% trans "Attributes" context "Dashboard attributes list" %}
     </li>
-  </ul>
+
 {% endblock %}
 
 {% block menu_catalogue_class %} active{% endblock %}
 
 {% block content %}
   {% if attributes %}
-    <ul class="collection list">
-      {% for pk, name, values in attributes %}
-        <li class="collection-item list-item">
+    <div class="row ">
+      {% for pk, name, values in attributes %}        
           <a class="list-item-name" href="{% url 'dashboard:product-attribute-update' pk=pk %}">
-            {{ name }}
-            <p class="list-item-desc">
-              {% for value in values %}
+          <div class="col-md-4 equalize">
+            <div class="panel panel-body border-top-warning text-center">
+              <h6 class="no-margin text-semibold">{{ name }}</h6>
+              <p class="content-group-sm text-muted">
+                {% for value in values %}
                 {{ value }}
                 {% if not forloop.last %}, {% endif %}
               {% endfor %}
-            </p>
+              </p>
+
+              <ul class="fab-menu">
+                <li>
+                  <a href="{% url 'dashboard:product-attribute-update' pk=pk %}" class="fab-menu-btn btn bg-blue btn-float btn-rounded btn-icon">
+                    <i class="fab-icon-open icon-pencil"></i>
+                   
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>           
           </a>
-        </li>
+        
       {% endfor %}
-    </ul>
+    </div>
+
   {% else %}
     <div class="not-found">
       <p class="grey-text">
@@ -53,4 +64,18 @@
       </p>
     </div>
   {% endif %}
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    var maxHeight = 0;
+    $(".equalize").each(function() {
+        if ($(this).height() > maxHeight) {
+            maxHeight = $(this).height();
+        }
+    });
+    $(".equalize").height(maxHeight);
+});
+
+</script>
 {% endblock %}

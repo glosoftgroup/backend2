@@ -144,7 +144,7 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ['attributes', 'product_class']
+        exclude = ['attributes']
 
     def __init__(self, *args, **kwargs):
         self.product_attributes = []
