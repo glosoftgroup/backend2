@@ -148,6 +148,7 @@
                     <fieldset>
                     
                     <div class="form-group">
+                    <label>Product Type</label>
                       {{ form_classes }}
                     </div>
                       <div class="form-group">
@@ -183,7 +184,7 @@
                         </div>
 
                         <div class="col-md-6">
-                          <div class="form-group">
+                          <div class="form-group">          
                              {% if not product.product_class.has_variants %}
                                 <div class="">
                                   {{ variant_form.sku }}

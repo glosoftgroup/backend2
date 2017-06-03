@@ -1,4 +1,4 @@
-<!-- Tasks options -->
+
 <div class="navbar navbar-default navbar-xs navbar-component">
 <ul class="nav navbar-nav no-border visible-xs-block">
 	<li><a class="text-center collapsed" data-toggle="collapse" data-target="#navbar-filter"><i class="icon-menu7"></i></a></li>
@@ -9,44 +9,16 @@
 
 	<ul class="nav navbar-nav">
 		<li>
-		<form action="#" class="main-search">
+		<form action="#" onsubmit="return false;" class="main-search">
 			<div class="input-group" style="margin:3px;">
-				<input type="search" id='search_product' name='search_product' class="form-control" placeholder="Search product">
-				<span class="input-group-addon " style=' cursor: pointer;'>
-					<i onclick='return false' type='submit' id='submit_search_product' class="icon-search4 text-size-base text-muted"></i>
+				<input type="input" id='search_product' name='search_product' class="form-control" placeholder="Search product">
+				<span class="input-group-addon " id='submit_search_product' style=' cursor: pointer;'>
+					<i onclick='return false' type='submit'  class="icon-search4 text-size-base text-mute"></i>
 				</span>			
 			</div>
 		</form>
 		</li>
-		
-		<li class="dropdown">
-			<a href="task_manager_grid.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-sort-time-asc position-left"></i> By date <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="task_manager_grid.html#">Show all</a></li>
-				<li class="divider"></li>
-				<li><a href="task_manager_grid.html#">Today</a></li>
-				<li><a href="task_manager_grid.html#">Yesterday</a></li>
-				<li><a href="task_manager_grid.html#">This week</a></li>
-				<li><a href="task_manager_grid.html#">This month</a></li>
-				<li><a href="task_manager_grid.html#">This year</a></li>
-			</ul>
-		</li>
-
-		<li class="dropdown">
-			<a href="task_manager_grid.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-sort-amount-desc position-left"></i> By status <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="task_manager_grid.html#">Show all</a></li>
-				<li class="divider"></li>
-				<li><a href="task_manager_grid.html#">Open</a></li>
-				<li><a href="task_manager_grid.html#">On hold</a></li>
-				<li><a href="task_manager_grid.html#">Resolved</a></li>
-				<li><a href="task_manager_grid.html#">Closed</a></li>
-				<li><a href="task_manager_grid.html#">Dublicate</a></li>
-				<li><a href="task_manager_grid.html#">Invalid</a></li>
-				<li><a href="task_manager_grid.html#">Wontfix</a></li>
-			</ul>
-		</li>
-
+		<!-- 
 		<li class="dropdown">
 			<a href="task_manager_grid.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-sort-numeric-asc position-left"></i> By priority <span class="caret"></span></a>
 			<ul class="dropdown-menu">
@@ -57,7 +29,7 @@
 				<li><a href="task_manager_grid.html#">Normal</a></li>
 				<li><a href="task_manager_grid.html#">Low</a></li>
 			</ul>
-		</li>
+		</li> -->
 	</ul>
 
 	<div class="navbar-right">

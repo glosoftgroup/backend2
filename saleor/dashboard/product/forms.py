@@ -155,6 +155,9 @@ class ProductForm(forms.ModelForm):
         field = self.fields['is_featured'] 
         field.widget.attrs['class'] = 'styled' 
 
+        field = self.fields['product_class'] 
+        field.widget.attrs['class'] = 'form-control bootstrap-select'
+
         field = self.fields['available_on'] 
         field.widget.attrs['class'] = 'form-control pickadate-selectors'
          
@@ -188,8 +191,9 @@ class ProductForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control bootstrap-select'
             else:
                 field = forms.CharField(**field_defaults)
+                field.widget.attrs['class'] = 'form-control'
             self.fields[attribute.get_formfield_name()] = field
-
+            
     def iter_attribute_fields(self):
         for attr in self.product_attributes:
             yield self[attr.get_formfield_name()]
@@ -336,6 +340,11 @@ class ProductAttributeForm(forms.ModelForm):
     class Meta:
         model = ProductAttribute
         exclude = []
+    def __init__(self, *args, **kwargs):
+        self.product_attributes = []
+        super(ProductAttributeForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
 
 class StockLocationForm(forms.ModelForm):
@@ -347,11 +356,17 @@ class StockLocationForm(forms.ModelForm):
 class AttributeChoiceValueForm(forms.ModelForm):
     class Meta:
         model = AttributeChoiceValue
-        exclude = ('slug', )
+        exclude = ('slug','color')
+    def __init__(self, *args, **kwargs):        
+        super(AttributeChoiceValueForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
 
     def save(self, commit=True):
         self.instance.slug = slugify(self.instance.name)
         return super(AttributeChoiceValueForm, self).save(commit=commit)
+
 
 
 AttributeChoiceValueFormset = inlineformset_factory(

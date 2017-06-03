@@ -55,35 +55,59 @@
 {% block menu_catalogue_class %} active{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col m12 l9">
-      <div class="card">
-        <form method="post" enctype="multipart/form-data" id="form-attributes" novalidate>
-          <div class="card-content card-content-form">
-            {% csrf_token %}
-            <div class="row">
-              {{ form.name|materializecss }}
+  <div class="panel panel-flat">
+    <div class="panel-heading">
+      <h5 class="panel-title">Product attribute</h5>
+      <div class="heading-elements">
+        <ul class="icons-list">
+          <li><a data-action="collapse"></a></li>
+          <li><a data-action="reload"></a></li>
+          <li><a data-action="close"></a></li>
+        </ul>
+      </div>
+    </div> 
+    <div class="panel-body">
+    <div class="row">
+    <form method="post" enctype="multipart/form-data" id="form-attributes" novalidate>       
+      {% csrf_token %}
+           
+         <div class="col-md-6">
+            <div class="form-group">
+             {{ form.name|materializecss }}
             </div>
-            <div class="row">
-              {{ form.slug|materializecss }}
-            </div>
-            <h5 class="card-title">
-              {% trans "Attribute values" context "Attribute values formset title" %}
-            </h5>
-            {{ formset.management_form }}
-            {{ formset.non_form_errors.as_ul }}
           </div>
-          <div class="formset-table-container">
-            <table id="formset" class="formset-table">
+          <div class="col-md-6">
+            <div class="form-group">
+             {{ form.slug|materializecss }}
+            </div>
+          </div>
+          <!-- attribute table -->
+          <div class="col-md-12">
+            <h5 class="panel-heading">
+              {% trans "Attribute values" context "Attribute values formset title" %}
+            </h5>   
+            {{ formset.management_form }}
+            {{ formset.non_form_errors.as_ul }}                   
+         </div>
+         
+         <div class="col-md-12 ">
+           <table id="formset"  class="table table-bordered datatable-header-footer">
               {% for form in formset.forms %}
                 {% if forloop.first %}
                   <thead>
-                    <tr>
+                    <tr class="bg-primary">
                       {% for field in form.visible_fields %}
                         <th>{{ field.label|capfirst }}</th>
                       {% endfor %}
                     </tr>
                   </thead>
+                  <tfoot>
+                    <tr class="bg-primary">
+                      {% for field in form.visible_fields %}
+                        <th>{{ field.label|capfirst }}</th>
+                      {% endfor %}
+                    </tr>
+                  </tfoot>
                 {% endif %}
                 <tr>
                   {% for field in form.visible_fields %}
@@ -99,27 +123,32 @@
                 </tr>
               {% endfor %}
             </table>
-          </div>
-          <div class="card-action right-align">
-            {% if attribute.pk %}
+         </div>
+      <!-- action buttons -->
+         <div class="text-right col-md-12">
+         {% if attribute.pk %}
               <a href="{% url 'dashboard:product-attributes' %}" class="btn btn-flat">
                 {% trans "Cancel" context "Dashboard cancel action" %}
               </a>
-              <button type="submit" class="btn waves-effect waves-light">
+              <button type="submit" class="btn btn-primary btn-primary waves-effect waves-light">
                 {% trans "Update" context "Dashboard update action" %}
               </button>
             {% else %}
               <a href="{% url 'dashboard:product-attributes' %}" class="btn btn-flat">
                 {% trans "Cancel" context "Dashboard cancel action" %}
               </a>
-              <button type="submit" class="btn waves-effect waves-light">
+              <button type="submit" class="btn btn-primary waves-effect waves-light">
                 {% trans "Create" context "Dashboard create action" %}
               </button>
             {% endif %}
-          </div>
-        </form>
-      </div>
+     </div>
+      </form>
     </div>
+   
+    </div>
+
+   </div>
+  
     <div class="col m12 l3 help-box"></div>
   </div>
 {% endblock %}

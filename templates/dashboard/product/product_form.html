@@ -185,6 +185,7 @@
                         {{ product_form.name}}
                       </div> 
                       <div class="form-group">
+                      <label>Product Type</label>           
                       {{ product_form.product_class}}
                        <!-- {{ form_classes }} -->
                       </div>
@@ -810,6 +811,14 @@
     $( "#div_attributes" ).empty().append( data );  });
 
   });
+
+  $("select[name*='product_class']").bind("keypress", function(event) {
+    if(event.which == 13) {
+    event.preventDefault();
+        // TRIGGER YOUR FUNCTION
+       alert('enter pressed');
+    }
+});
 
 
   $('.switch-actions').on('change', function() {

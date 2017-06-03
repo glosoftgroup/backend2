@@ -11,9 +11,24 @@
 
 {% block custom_js %}
   <!-- Theme JS files -->
+  <script type="text/javascript">
+    $( "#submit_search_product").on('click',function() {   
+    var search_product = $( "#search_product" ).val();
+         
+      {% url "dashboard:search-product" as url %} 
+      var url = "{{ url }}";
+      var posting = $.post( url, {search_product:search_product,'csrfmiddlewaretoken': '{{ csrf_token }}'} );
+      // Put the results in a div
+      posting.done(function( data ) {    
+      $("#search_results" ).empty().append( data ); 
+      // $('#modal_add_tax').modal(); 
+      });
+    
+   });
+  </script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/tables/datatables/datatables.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/tables/datatables/extensions/fixed_header.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'backend/js/pages/colors_blue.js' %}"></script>
+  <!-- <script type="text/javascript" src="{% static 'backend/js/pages/colors_blue.js' %}"></script> -->
 {% endblock %}
 
 {% block menu_products_class %}active{% endblock %}
@@ -78,7 +93,7 @@
         <div class="table-responsive">
         <table class="table table-bordered datatable-header-footer">
                 <thead>
-                  <tr>
+                  <tr class="bg-primary">
                     <th>Id</th>
                     <th>Image</th>
                     <th>Product Name</th>
@@ -89,7 +104,7 @@
                   </tr>
                 </thead>
                 <tfoot>
-                  <tr>
+                  <tr class="bg-primary">
                     <th>Id</th>
                     <th>Image</th>
                     <th>Product Name</th>

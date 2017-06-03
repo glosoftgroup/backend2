@@ -24,29 +24,24 @@
 {% endblock %}
 
 {% block header_extra %}
-  <div class="fixed-action-btn">
-    <a class="btn-fab btn-floating btn-large waves-effect waves-light teal"
-    title="{% trans "Add category" context "Category list add button text" %}"
-    href="{% if root %}{% url 'dashboard:category-add' root_pk=root.pk %}{% else %}{% url 'dashboard:category-add' %}{% endif %}">
-      <svg data-src="{% static "dashboard/images/add.svg" %}" />
+  <li >
+    <a class="" href="{% if root %}{% url 'dashboard:category-add' root_pk=root.pk %}{% else %}{% url 'dashboard:category-add' %}{% endif %}"><i class="icon-plus3"></i>
+     Add category
     </a>
-  </div>
+  </li>
+  
   {% if root %}
-    <a class="dropdown-button right" href="#" data-activates="category-delete" data-constrainwidth="false">
-      <svg data-src="{% static "dashboard/images/more_vert.svg" %}" height="24" width="24" />
+  <li >
+    <a href="#modal_instance" data-title="Delete Category, with {{ root.name }}%" data-warning="" data-href="{% url 'dashboard:category-edit' root_pk=root.pk %}"
+    class="modal-trigger"><i class="icon-pencil7 position-left" data-popup="tooltip" tite='Edit product' data-placement="bottom"  data-original-title="Edit me"></i>Edit category
     </a>
-    <ul id="category-delete" class="dropdown-content">
-      <li>
-        <a class="modal-trigger-custom" data-href="{% url 'dashboard:category-edit' root_pk=root.pk %}" href="#base-modal">
-          {% trans "Edit category" context "Dashboard edit action" %}
-        </a>
-      </li>
-      <li>
-        <a class="modal-trigger-custom" data-href="{% url 'dashboard:category-delete' pk=root.pk %}" href="#base-modal">
-          {% trans "Remove category" context "Category list action link" %}
-        </a>
-      </li>
-    </ul>
+  </li>
+  <li >
+    <a href="#modal_instance" data-title="Delete Category, with {{ root.name }}%" data-warning="" data-href="{% url 'dashboard:category-delete' pk=root.pk %}"
+    class="modal-trigger"><i class="icon-trash position-left" data-popup="tooltip"  data-placement="bottom"  data-original-title="Delete me"></i>Remove category
+    </a>
+  </li>  
+    
   {% endif %}
 {% endblock %}
 
@@ -66,9 +61,9 @@
       </li>
     {% endif %}
     {% if path %}
-      <li class="back-mobile">
+      <li >
         <a href="{% url 'dashboard:category-list' %}">
-          <svg data-src="{% static "dashboard/images/arrow_left.svg" %}" fill="#fff" width="20px" height="20px" />
+         Back
         </a>
       </li>
       {% for node in path %}
@@ -130,4 +125,10 @@
       {% endif %}
     </div>
   {% endif %}
+  <!-- include action modal instance -->
+{% include "dashboard/includes/_modal.html"  %}
+{% endblock %}
+{% block custom_js %}
+
+<script type="text/javascript" src="{% static 'backend/js/backend.js' %}"></script>
 {% endblock %}
