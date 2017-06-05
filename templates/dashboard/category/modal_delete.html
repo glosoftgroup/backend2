@@ -3,8 +3,8 @@
 
 <form method="post" id="form-category" class="form-async" action="{% url "dashboard:category-delete" pk=category.pk %}" novalidate>
   {% csrf_token %}
-  <div class="modal-content">
-    <div class="row">
+  <div class="modal-body">
+    <div class="">
       <div class="col s12">
         <h5>
           {% blocktrans with category=category trimmed context "Delete category modal title" %}
@@ -14,7 +14,7 @@
       </div>
     </div>
     {% if descendants %}
-      <div class="row">
+      <div class="">
         <div class="col s12">
           {% trans "The following child categories will be deleted:" context "Delete category form text about descendant categories" %}
           <ul>
@@ -41,10 +41,10 @@
     {% endif %}
   </div>
   <div class="modal-footer">
-    <button type="submit" class="modal-action btn-flat">
+    <button type="submit" class="modal-action btn btn-primary">
       {% trans "Delete" context "Dashboard delete action" %}
     </button>
-    <a href="#!" class="modal-action modal-close btn-flat">
+    <a href="#!" data-dismiss="modal" class="modal-action modal-close btn btn-flat">
       {% trans "Cancel" context "Dashboard cancel action" %}
     </a>
   </div>

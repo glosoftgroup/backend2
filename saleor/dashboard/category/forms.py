@@ -12,6 +12,8 @@ class CategoryForm(forms.ModelForm):
         super(CategoryForm, self).__init__(*args, **kwargs)
         if self.instance.parent and self.instance.parent.hidden:
             self.fields['hidden'].widget.attrs['disabled'] = True
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = Category

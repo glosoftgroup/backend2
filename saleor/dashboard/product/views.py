@@ -7,6 +7,7 @@ from django.template.response import TemplateResponse
 from django.utils.http import is_safe_url
 from django.utils.translation import pgettext_lazy
 from django.views.decorators.http import require_http_methods
+from django.contrib.postgres.search import SearchVector
 
 from . import forms
 from ...core.utils import get_paginator_items
@@ -592,14 +593,17 @@ def purchase_list(request):
     return TemplateResponse(
         request, 'dashboard/purchase/purchase_list.html',
         ctx)
+
 @staff_member_required
 def search_product(request):
     if request.method == 'POST':
         if request.is_ajax():
-            search = request.POST.get("search_product", "--") 
+            search  = request.POST.get("search_product", "--") 
             product = Product()
+            products_count = len(Product.objects.all())
             product_results = Product.objects.filter(name__icontains=search)
-            ctx = {'product_results': product_results}
+            search_count = len(product_results)
+            ctx = {'products_count': products_count,'product_results': product_results,'search_count':search_count}
             return TemplateResponse(
-        request, 'dashboard/purchase/includes/product_search_results.html',
+        request, 'dashboard/includes/product_search_results.html',
         ctx)

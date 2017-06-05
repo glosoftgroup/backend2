@@ -11,7 +11,7 @@
 
 $(function() {
 
-
+  
   $('.modal-trigger').on('click', function (e) {
     let that = this;  
     var url = $(this).data('href') 
@@ -24,6 +24,25 @@ $(function() {
     
    
   });
+  // update modal content from ajax results
+  $( ".modal-trigger-ajax").on('click',function() {   
+       
+    var url = $(this).data('href')
+    var prompt_text = $(this).data('title');
+    var modal = $(this).attr('href');
+    var csrf_token = $(this).data('csrf_token')
+    
+    $('.modal-title').html(prompt_text);
+    $(".results" ).empty().append('<span class="text-center" style="padding:23px">Loading...<i class=" icon-spinner"></i></span>');
+    $(modal).modal();
+      var posting = $.get( url, {'csrfmiddlewaretoken':csrf_token });
+      // Put the results in a div
+      posting.done(function( data ) {    
+      $(".results" ).empty().append( data ); 
+       
+      });
+    
+   });
 
 	$('#select-all-variants').click(function () {    
 	  $(':checkbox.switch-actions').prop('checked', this.checked);    
