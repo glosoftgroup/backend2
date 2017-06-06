@@ -139,6 +139,9 @@ class Product(models.Model, ItemRange, index.Indexed):
     price = PriceField(
         pgettext_lazy('Product field', 'price'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2)
+    wholesale_price = PriceField(
+        pgettext_lazy('Product field', 'Wholesale price'),
+        currency=settings.DEFAULT_CURRENCY, blank=True,null=True, max_digits=12, decimal_places=2)
     
     available_on = models.DateField(
         pgettext_lazy('Product field', 'available on'), blank=True, null=True)
@@ -181,6 +184,9 @@ class Product(models.Model, ItemRange, index.Indexed):
 
     def get_slug(self):
         return slugify(smart_text(unidecode(self.name)))
+    
+    def get_product_tax(self):
+        return self.product_tax
 
     def is_in_stock(self):
         return any(variant.is_in_stock() for variant in self)
@@ -190,6 +196,9 @@ class Product(models.Model, ItemRange, index.Indexed):
             if not category.hidden:
                 return category
         return None
+    def get_variants_count(self):
+        attr_count = self.variants.filter(product=self.pk)
+        return len(attr_count)
 
     def is_available(self):
         today = datetime.date.today()
@@ -229,6 +238,10 @@ class ProductVariant(models.Model, Item):
         pgettext_lazy('Product variant field', 'price override'),
         currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2,
         blank=True, null=True)
+    wholesale_override = PriceField(
+        pgettext_lazy('Product variant field', 'wholesale override'),
+        currency=settings.DEFAULT_CURRENCY, max_digits=12, decimal_places=2,
+        blank=True, null=True)
     
     product = models.ForeignKey(Product, related_name='variants')
     attributes = HStoreField(
@@ -249,7 +262,13 @@ class ProductVariant(models.Model, Item):
         available_quantity = self.get_stock_quantity()
         if quantity > available_quantity:
             raise InsufficientStock(self)
-
+    def get_cost_price(self):
+        cost_price = self.stock.cost_price
+    def get_stock_pk(self):
+        stock_pk = self.stock.all().values('pk')
+        for st in stock_pk:
+            stock_pk = st['pk']       
+        return stock_pk
     def get_stock_quantity(self):
         if not len(self.stock.all()):
             return 0
@@ -370,7 +389,7 @@ class Stock(models.Model):
         unique_together = ('variant', 'location')
 
     def __str__(self):
-        return '%s - %s' % (self.variant.name, self.location)
+        return '%s - %s' % (self.variant.name, self.pk)
 
     @property
     def quantity_available(self):
@@ -379,6 +398,9 @@ class Stock(models.Model):
         return self.cost_price
     def varaintName(self):        
         return self.variant.price_override;
+    def Access_pk(self):
+        return self.pk
+
 
 
 @python_2_unicode_compatible

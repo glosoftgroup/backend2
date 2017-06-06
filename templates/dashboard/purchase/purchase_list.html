@@ -15,7 +15,7 @@
 
 {% endblock %}
 {% block header_extra %}
-<li style='padding: 9px;'>
+<li style=''>
 	<a class="" href=""><i class="icon-plus"></i>
 	 Purchase item
 	</a>
@@ -36,25 +36,8 @@
 	</div>
 
 	<div class="panel-body">
-		<form action="#" class="main-search">
-			<div class="input-group content-group">
-				<div class="has-feedback has-feedback-left">
-					<input type="text" id='search_product' name='search_product' class="form-control input-xlg" value="" placeholder="Search product">
-					<div class="form-control-feedback">
-						<i class="icon-search4 text-muted text-size-base"></i>
-					</div>
-					{% url "dashboard:search-product" as url %}
-					<input class="hidden" type="hidden" id="csrf_token" value="{{ csrf_token }}" name="csrf_token">
-					<input type="hidden" class="hidden" value='{{ url }}' id='search_url' name="url">
-				</div>
-
-				<div class="input-group-btn">
-					<button type="submit" id='submit_search_product' onclick='return false' class="btn btn-primary btn-xlg">Search</button>
-				</div>
-			</div>
-
-			
-		</form>
+	{% url "dashboard:search-sku" as url %}
+	{% include "dashboard/includes/_product_filter.html" with url=url%}
 	</div>
 </div>
 <div id="search_results"></div>
@@ -62,7 +45,14 @@
 {% endblock %}
 {% block custom_js %}
 <script type="text/javascript">
- 	
+ $(document).ready(function() {
+
+       $(".clickable-td").click(function() {
+
+           window.location = $(this).data("href");
+
+       });
+    });	
 </script>
 <script type="text/javascript" src="{% static 'backend/js/search.js' %}"></script>
 {% endblock %}

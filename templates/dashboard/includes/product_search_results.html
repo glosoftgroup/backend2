@@ -27,7 +27,7 @@
         <th>Product Name</th>
         <th>Category</th>
         <th>Price</th>
-        <th>Quantity</th>
+        <th>Variants</th>
         <th class="text-center">Actions</th>
       </tr>
     </thead>
@@ -38,7 +38,7 @@
         <th>Product Name</th>
         <th>Category</th>
         <th>Price</th>
-        <th>Quantity</th>
+        <th>Variants</th>
         <th class="text-center">Actions</th>
       </tr>
     </tfoot>
@@ -63,7 +63,7 @@
     <!-- price -->
     <td> {% gross product.price html=True %}</td>
     <!-- quantity -->
-    <td>Quantity</td>
+    <td>{{ product.get_variants_count }}</td>
     <!-- actions -->
     <td class="text-center">
       <ul class="icons-list">

@@ -65,7 +65,8 @@
 
 {% block content %}
 <div class="">
-{% include "dashboard/includes/_product_filter.html"  %}
+{% url "dashboard:search-product" as url %}
+{% include "dashboard/includes/_product_filter.html" with url=url  %}
 </div>
 <div class="clearfix"></div>
   <div class="" id="search_results">
@@ -90,7 +91,7 @@
                     <th>Id</th>
                     <th>Image</th>
                     <th>Product Name</th>
-                    <th>Category</th>
+                    <th>Variants</th>
                     <th>Price</th>
                     <th>Quantity</th>
                     <th class="text-center">Actions</th>
@@ -103,7 +104,7 @@
                     <th>Product Name</th>
                     <th>Category</th>
                     <th>Price</th>
-                    <th>Quantity</th>
+                    <th>Variants</th>
                     <th class="text-center">Actions</th>
                   </tr>
                 </tfoot>
@@ -127,8 +128,12 @@
                     </td>
                     <!-- price -->
                     <td> {% gross product.price html=True %}</td>
-                    <!-- quantity -->
-                    <td>Quantity</td>
+                    <!-- variants -->
+                    <td>
+                    
+                    {{ product.get_variants_count }}
+                    
+                    </td>
                     <!-- actions -->
                     <td class="text-center">
                       <ul class="icons-list">

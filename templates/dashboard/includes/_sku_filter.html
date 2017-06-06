@@ -17,7 +17,7 @@
 					<div class="form-control-feedback">
 						<i class="icon-search4 text-muted text-size-base"></i>
 					</div>
-					
+					{% url "dashboard:search-product" as url %}
 					<input class="hidden" type="hidden" id="csrf_token" value="{{ csrf_token }}" name="csrf_token">
 					<input type="hidden" class="hidden" value='{{ url }}' id='search_url' name="url">
 				</div>

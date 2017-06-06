@@ -124,12 +124,14 @@ def fetch_variants(request):
             return TemplateResponse(
         request, 'dashboard/product/attributes.html', ctx)
 @staff_member_required
-def product_create(request, class_pk=1):
+def product_create(request):
     product_classes = ProductClass.objects.order_by('pk')
     form_classes = forms.ProductClassSelectorForm(
         request.POST or None, product_classes=product_classes)
     if form_classes.is_valid():
         class_pk=form_classes.cleaned_data['product_cls']
+    else:
+        class_pk= 1
     product_class = get_object_or_404(ProductClass, pk=class_pk)
     create_variant = not product_class.has_variants
     product = Product()
@@ -167,13 +169,6 @@ def product_create(request, class_pk=1):
 
 @staff_member_required
 def product_edit(request, pk):
-    # product_classes = ProductClass.objects.all()
-    # form_classes = forms.ProductClassSelectorForm(
-    #     request.POST or None, product_classes=product_classes)
-    # if form_classes.is_valid():
-    #     class_pk=form_classes.cleaned_data['product_cls']
-   
-
     product = get_object_or_404(
         Product.objects.prefetch_related(
             'images', 'variants'), pk=pk)
@@ -208,8 +203,7 @@ def product_edit(request, pk):
            'product': product, 'stock_delete_form': stock_delete_form,
            'stock_items': stock_items, 'variants': variants,
            'variants_delete_form': variants_delete_form,
-           'variant_form': variant_form,
-           }
+           'variant_form': variant_form}
     return TemplateResponse(
         request, 'dashboard/product/product_form.html', ctx)
 
@@ -606,4 +600,19 @@ def search_product(request):
             ctx = {'products_count': products_count,'product_results': product_results,'search_count':search_count}
             return TemplateResponse(
         request, 'dashboard/includes/product_search_results.html',
+        ctx)
+
+@staff_member_required
+def search_sku(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            search  = request.POST.get("search_product", "--") 
+            product = Product()
+            products_count = len(ProductVariant.objects.all())
+            product_results = ProductVariant.objects.filter(sku__icontains=search)
+            #product_results = ProductVariant.objects.filter(sku__name__icontains=search)
+            search_count = len(product_results)
+            ctx = {'products_count': products_count,'product_results': product_results,'search_count':search_count}
+            return TemplateResponse(
+        request, 'dashboard/includes/sku_search_results.html',
         ctx)

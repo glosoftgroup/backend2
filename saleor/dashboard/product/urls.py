@@ -36,6 +36,8 @@ urlpatterns = [
     # search routes
     url(r'^search_ajax/$',
         views.search_product, name='search-product'),
+     url(r'^search_sku/$',
+        views.search_sku, name='search-sku'),
     # end search routes
     url(r'^classes/$',
         views.product_class_list, name='product-class-list'),
