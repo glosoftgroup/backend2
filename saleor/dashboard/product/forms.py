@@ -222,6 +222,8 @@ class ProductVariantForm(forms.ModelForm):
         if self.instance.product.pk:
             self.fields['price_override'].widget.attrs[
                 'placeholder'] = self.instance.product.price.gross
+            self.fields['wholesale_override'].widget.attrs[
+                'placeholder'] = self.instance.product.price.gross
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 

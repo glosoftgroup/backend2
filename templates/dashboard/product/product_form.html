@@ -219,7 +219,7 @@
                       <div class="">
                       <!-- Tax -->
                        <div class="col-md-12">
-                          <div class="form-group" id='tax_field'>
+                          <div class="form-group col-md-12" id='tax_field'>
                             <label>Tax: % </label>
                             <div class="input-group">
                             {{ product_form.product_tax }}
@@ -229,19 +229,38 @@
                              </div>
                           </div>
                         </div>
-                        <!-- wholesale price exclusive tax -->
+                        <!-- Retail price exclusive tax -->
                         <div class="col-md-6">
                           <div class="form-group">
                             <label class="col-md-12">Retail  Price:</label>
-                            {{ product_form.price }}                            
+                            {{ product_form.price }}                      
                           </div>
                         </div>
-                        <!-- selling price exclusive tax -->
+                        <!-- wholesale price exclusive tax -->
                         <div class="col-md-6">
                           <div class="form-group">
                             <label class="col-md-12">wholesale Price:</label>
-                            {{ product_form.wholesale_price }}                            
+                            {{ product_form.wholesale_price }}                     
                           </div>
+                        </div>
+
+                        <!-- disabled display -->
+                        <div class="col-md-6 divider">
+                          <div class="form-group">
+                            <label class="col-md-12 text-muted">Retail Price:( Inclusive Tax)</label>
+                          <span class="col-md-12">
+                           <input type="disabled" name="retail_plus_tax" id="retail_plus_tax" class="form-control" value="12" disabled="">
+                           </span>                     
+                          </div>                    
+                        </div>
+                        <!-- wholesale disabled -->
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-md-12 text-muted">wholesale Price:(Inclusive Tax)</label>
+                            <span class="col-md-12">
+                           <input type="disabled" name="wholesale_plus_tax" id="wholesale_plus_tax" class="form-control" value="12" disabled="">
+                           </span>                     
+                          </div>                    
                         </div>
                         
                       </div>
@@ -358,7 +377,7 @@
             </div>
           </div>
           <div class="data-table-container">
-            <table class="table table-bordered datatable-header-footer">
+            <table class="table  datatable-header-footer">
               {% if variants %}
                 <thead>
                
@@ -380,7 +399,10 @@
                     </th>
                     
                     <th class="right-align">
-                      {% trans "Price" context "Product variant table header" %}
+                      Retail Price
+                    </th>
+                    <th class="right-align">
+                      Wholesale Price
                     </th>
                     <th class="text-center">Actions</th>
                   </tr>
@@ -403,9 +425,15 @@
                       <td>
                         {{ variant.name }}
                       </td>
-                     
+                      <!-- retail price -->
                       <td class="right-align">
                 {% gross variant.get_price_per_item html=True %}
+                      </td>
+                      <!-- wholesale price -->
+                      <td class="right-align">
+                      {% if variant.get_wholesale_price_per_item %}
+                {% gross variant.get_wholesale_price_per_item html=True %}
+                     {% endif %}
                       </td>
                       <!-- actions -->
                     <td class="text-center">
@@ -840,6 +868,36 @@
 {% if product.pk %}
 <script type="text/javascript" src="{% static 'backend/js/plugins/media/fancybox.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'backend/js/pages/gallery.js' %}"></script>
+<script type="text/javascript">
+ function roundOff(val){
+  return Math.round(val * 100) / 100;
+ }
+ function pricing(){
+  // calculate retail tax exclusive tax
+  var tax = $('#id_product_tax option:selected').text();
+  var retail = $('#id_price').val();
+  var retail_plus_tax = (parseInt(retail)*100)/(parseInt(tax)+100);
+  retail_plus_tax=roundOff(retail_plus_tax);
+
+  $('#retail_plus_tax').attr('value',retail_plus_tax);
+
+  // calculate wholesale price exclusive tax
+  var wholesale = $('#id_wholesale_price').val();
+
+  var wholesale_plus_tax = (parseInt(wholesale)*100)/(parseInt(tax)+100);
+  wholesale_plus_tax=roundOff(wholesale_plus_tax);
+   $('#wholesale_plus_tax').attr('value',wholesale_plus_tax);
+ }
+  $("#id_price").on("change keyup paste keydown", function(event) {    
+      pricing();      
+  });
+  $("#id_product_tax").on("change", function(event) {
+    pricing();  
+  });
+  $("#id_wholesale_price").on("change keyup paste keydown", function(event) {
+    pricing();  
+  });
+</script>
 {% endif %}
  {% endblock %}}
 }

@@ -16,7 +16,7 @@ from ...product.models import (Product, ProductAttribute, ProductClass,
                                StockLocation, ProductTax)
 from ..views import staff_member_required
 from django.http import HttpResponse
-
+from django.db.models import Q
 
 @staff_member_required
 def product_class_list(request):
@@ -595,7 +595,8 @@ def search_product(request):
             search  = request.POST.get("search_product", "--") 
             product = Product()
             products_count = len(Product.objects.all())
-            product_results = Product.objects.filter(name__icontains=search)
+            product_results = Product.objects.filter(Q(name__icontains=search)|Q(variants__sku__icontains=search))
+            #Q(productvariant__sku__icontains=search)
             search_count = len(product_results)
             ctx = {'products_count': products_count,'product_results': product_results,'search_count':search_count}
             return TemplateResponse(
@@ -609,8 +610,7 @@ def search_sku(request):
             search  = request.POST.get("search_product", "--") 
             product = Product()
             products_count = len(ProductVariant.objects.all())
-            product_results = ProductVariant.objects.filter(sku__icontains=search)
-            #product_results = ProductVariant.objects.filter(sku__name__icontains=search)
+            product_results = ProductVariant.objects.filter(Q(sku__icontains=search) | Q(product__name__icontains=search))            
             search_count = len(product_results)
             ctx = {'products_count': products_count,'product_results': product_results,'search_count':search_count}
             return TemplateResponse(

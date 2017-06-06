@@ -279,6 +279,11 @@ class ProductVariant(models.Model, Item):
         price = calculate_discounted_price(self.product, price, discounts,
                                            **kwargs)
         return price
+    def get_wholesale_price_per_item(self, discounts=None, **kwargs):
+        price = self.wholesale_override or self.product.wholesale_price
+        price = calculate_discounted_price(self.product, price, discounts,
+                                           **kwargs)
+        return price
 
     def get_absolute_url(self):
         slug = self.product.get_slug()

@@ -82,8 +82,13 @@
     <!-- variant -->		
 	{{ variant.display_variant }}	
 	</td>
-
-	<td class='clickable-td' data-href="{% url 'dashboard:product-stock-update' product_pk=variant.product.pk stock_pk=variant.get_stock_pk %}">
+    {% if variant.get_stock_pk %}
+	<td class='clickable-td' 
+	data-href="{% url 'dashboard:product-stock-update' product_pk=variant.product.pk stock_pk=variant.get_stock_pk %}">
+	{% else %}
+	<td class='clickable-td' 
+	data-href="">
+	{% endif %}
 	<span class="label bg-success-400">Add stock
 	</span>
 			

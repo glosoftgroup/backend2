@@ -157,19 +157,14 @@
 {% block custom_js %}
 <script type="text/javascript" src="{% static 'backend/js/backend.js' %}"></script>
 <script type="text/javascript">
-  $("#id_name").bind("keydown", function(event) {
+
+  $("#id_name").on("change keyup paste keydown", function(event) {
     
        var slug = $(this).val();             
        $('#id_slug').attr('value',slug);
        var slug = $(this).val();
    
   });
-  $("#id_name").bind("keyup", function(event) {
-    
-       var slug = $(this).val();             
-       $('#id_slug').attr('value',slug);
-       var slug = $(this).val();
-   
-  });
+  
 </script>
 {% endblock %}
