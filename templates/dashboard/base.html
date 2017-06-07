@@ -173,7 +173,7 @@
                 <li><a href="#"><i class="icon-coins"></i> <span>{% trans "Discounts" context "Dashboard discounts list" %}</span></a>
                   <ul>
                     <li class="{% block menu_sales_class %}{% endblock %}">
-                    <a href="{% url 'dashboard:sale-list' %}">{% trans "Sales" context "Dashboard sales (discounts) list" %}
+                    <a href="{% url 'dashboard:sale-list' %}">Discounts
                     </a>
                     </li>
                     <li class="{% block menu_tax_list %}{% endblock %}">
@@ -300,7 +300,6 @@ margin-bottom: 0;">
   <script type="text/javascript" src="{% static 'backend/js/pages/form_layouts.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/uniform.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/notifications/pnotify.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'backend/js/search.js' %}">
     <!-- Core Scripts - Include with every page -->
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
       
@@ -308,7 +307,7 @@ margin-bottom: 0;">
     {% include "dashboard/includes/_messages.html" %}
     
     {% block custom_js %}{% endblock %}
-
+    <script type="text/javascript" src="{% static 'backend/js/search.js' %}"></script>
    </div>
   </body>
 </html>

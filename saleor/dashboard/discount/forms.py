@@ -14,6 +14,19 @@ class SaleForm(forms.ModelForm):
     class Meta:
         model = Sale
         exclude = []
+    def __init__(self, *args, **kwargs):        
+        super(SaleForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+        field = self.fields['products'] 
+        field.widget.attrs['class'] = 'form-control multiselect'
+        field.widget.attrs['multiple'] = 'multiple'
+
+        field = self.fields['categories'] 
+        field.widget.attrs['class'] = 'form-control multiselect'
+        field.widget.attrs['multiple'] = 'multiple'
+        
 
     def clean(self):
         cleaned_data = super(SaleForm, self).clean()

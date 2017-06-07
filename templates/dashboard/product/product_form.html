@@ -137,8 +137,7 @@
               
                 <div class="row">
                   <div class="col-md-6">
-                    <fieldset>
-                    
+                    <fieldset>                  
                    
                       <div class="form-group">
                         <label>Product Name:</label>
@@ -167,15 +166,12 @@
                       <div class="form-group">
                         <label>Product Description:</label>
                        {{ product_form.description }}
-                      </div>                   
-                    
-                                          
+                      </div>                  
                     </fieldset>
                   </div>
 
                   <div class="col-md-6">
-                    <fieldset>                           
-                       
+                    <fieldset>
                       <div class="">
                       <!-- Tax -->
                        <div class="col-md-12">
@@ -192,14 +188,14 @@
                         <!-- Retail price exclusive tax -->
                         <div class="col-md-6">
                           <div class="form-group">
-                            <label class="col-md-12">Retail  Price:</label>
+                            <label class="col-md-12">Retail Price:<span class="text-muted text-small">(Inclusive Tax)</span></label>
                             {{ product_form.price }}                      
                           </div>
                         </div>
                         <!-- wholesale price exclusive tax -->
                         <div class="col-md-6">
                           <div class="form-group">
-                            <label class="col-md-12">wholesale Price:</label>
+                            <label class="col-md-12">wholesale Price:<span class="text-muted text-small">(Inclusive Tax)</span></label>
                             {{ product_form.wholesale_price }}                     
                           </div>
                         </div>
@@ -207,28 +203,51 @@
                         <!-- disabled display -->
                         <div class="col-md-6 divider">
                           <div class="form-group">
-                            <label class="col-md-12 text-muted">Retail Price:( Inclusive Tax)</label>
+                            <label class="col-md-12 text-muted">Retail Price:<span class="text-muted text-small">(Before Tax)</span></label>
                           <span class="col-md-12">
                            <input type="disabled" name="retail_plus_tax" id="retail_plus_tax" class="form-control" value="" disabled="">
-                           </span>                     
+                           </span>                  
                           </div>                    
                         </div>
                         <!-- wholesale disabled -->
                         <div class="col-md-6">
                           <div class="form-group">
-                            <label class="col-md-12 text-muted">wholesale Price:(Inclusive Tax)</label>
+                            <label class="col-md-12 text-muted">wholesale Price:(Before Tax)</label>
                             <span class="col-md-12">
                            <input type="disabled" name="wholesale_plus_tax" id="wholesale_plus_tax" class="form-control" value="" disabled="">
-                           </span>                     
+                           </span>                  
+                          </div>                    
+                        </div>
+                        <!-- tax in KES -->
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-md-12 text-muted">Retail Tax:</label>
+                            <span class="col-md-12">
+                           <input type="disabled" name="retail_tax" id="retail_tax" class="form-control" value="" disabled="">
+                           </span>                  
+                          </div>                    
+                        </div>
+                        <!-- wholesale tax -->
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-md-12 text-muted">Wholesale Tax:</label>
+                            <span class="col-md-12">
+                           <input type="disabled" name="wholesale_tax" id="wholesale_tax" class="form-control" value="" disabled="">
+                           </span>                  
                           </div>                    
                         </div>
                         
                       </div>
 
                       <div class="">
-                        
                         <div class="col-md-12">
-                          <div class="form-group">
+                          <div class="form-group col-md-12">
+                            <label>Reorder Stock Threshold:</label>
+                           {{ product_form.low_stock_threshold }}
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="form-group col-md-12">
                             <label>Available:</label>
                            {{ product_form.available_on }}
                           </div>
@@ -707,7 +726,64 @@
   <script type="text/javascript" src="{% static 'backend/js/core/libraries/jquery_ui/core.min.js' %}"></script>
 
 <script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/selectboxit.min.js' %}"></script>
+<script type="text/javascript">
+ function roundOff(val){
+  return Math.round(val * 100) / 100;
+ }
+ function getTax(){
+    // get tax value
+    {% url "dashboard:tax-add-ajax" as url %} 
+    var url = "{{ url }}";
+    var tax_id = $('#id_product_tax').val();
+    var posting = $.post( url, {tax_id:tax_id,} );
+    posting.done(function( data ){       
+      if(data.length > 3)
+      {
+        localStorage.setItem('tax', parseInt(0));
+      }else{
+       localStorage.setItem('tax', parseInt(data)); 
+      }
+      pricing()
+     });    
+    return localStorage.getItem("tax");
+    
+ }
+ getTax()
+ function pricing(){
+  // fetch tax from the server
+  var tax = localStorage.getItem("tax")
+  // calculate retail tax exclusive tax       
+  var retail = $('#id_price').val();
+  var retail_plus_tax = (parseInt(retail)*100)/(parseInt(tax)+100);
+  retail_plus_tax=roundOff(retail_plus_tax);
 
+  $('#retail_plus_tax').attr('value',retail_plus_tax);
+  //alert(retail_plus_tax);
+  var tx = parseInt(retail)-parseInt(retail_plus_tax);
+  
+  $('#retail_tax').attr('value',tx);
+
+  // calculate wholesale price exclusive tax
+  var wholesale = $('#id_wholesale_price').val();
+
+  var wholesale_plus_tax = (parseInt(wholesale)*100)/(parseInt(tax)+100);
+  wholesale_plus_tax=roundOff(wholesale_plus_tax);
+   $('#wholesale_plus_tax').attr('value',wholesale_plus_tax);
+   var wtx = parseInt(wholesale)-parseInt(wholesale_plus_tax);
+   $('#wholesale_tax').attr('value',wtx);
+  }
+  $("#id_price").on("change keyup paste keydown", function(event) {    
+      pricing();      
+  });
+  $("#id_product_tax").on("change onbur keyup keydown", function(event) {     
+    //getTax();   
+    // calculate exclusive tax price values    
+    pricing();  
+  });
+  $("#id_wholesale_price").on("change keyup paste keydown", function(event) {    
+    pricing();  
+  });
+</script>
   <script type="text/javascript" >
   
     // Dynamic options
@@ -805,9 +881,6 @@
 
   });
 
-
-
-
   $('.switch-actions').on('change', function() {
   let $btnChecked = $(this).parents('form').find('.btn-show-when-checked');
   let $btnUnchecked = $(this).parents('form').find('.btn-show-when-unchecked');
@@ -821,62 +894,11 @@
 });
   </script>
 <script type="text/javascript" src="{% static 'backend/js/backend.js' %}"></script>
-<script type="text/javascript" src="{% static 'backend/js/search.js' %}"></script>
+<!-- <script type="text/javascript" src="{% static 'backend/js/search.js' %}"></script> -->
 {% if product.pk %}
 <script type="text/javascript" src="{% static 'backend/js/plugins/media/fancybox.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'backend/js/pages/gallery.js' %}"></script>
-<script type="text/javascript">
- function roundOff(val){
-  return Math.round(val * 100) / 100;
- }
- function getTax(){
-    // get tax value
-    {% url "dashboard:tax-add-ajax" as url %} 
-    var url = "{{ url }}";
-    var tax_id = $('#id_product_tax').val();
-    var posting = $.post( url, {tax_id:tax_id,} );
-    posting.done(function( data ){       
-      if(data.length > 3)
-      {
-        localStorage.setItem('tax', parseInt(0));
-      }else{
-       localStorage.setItem('tax', parseInt(data)); 
-      }
-      pricing()
-     });    
-    return localStorage.getItem("tax");
-    
- }
- localStorage.setItem('tax', parseInt(0));
- function pricing(){
-  // fetch tax from the server
-  var tax = localStorage.getItem("tax")
-  // calculate retail tax exclusive tax       
-  var retail = $('#id_price').val();
-  var retail_plus_tax = (parseInt(retail)*100)/(parseInt(tax)+100);
-  retail_plus_tax=roundOff(retail_plus_tax);
 
-  $('#retail_plus_tax').attr('value',retail_plus_tax);
-
-  // calculate wholesale price exclusive tax
-  var wholesale = $('#id_wholesale_price').val();
-
-  var wholesale_plus_tax = (parseInt(wholesale)*100)/(parseInt(tax)+100);
-  wholesale_plus_tax=roundOff(wholesale_plus_tax);
-   $('#wholesale_plus_tax').attr('value',wholesale_plus_tax);
-  }
-  $("#id_price").on("change keyup paste keydown", function(event) {    
-      pricing();      
-  });
-  $("#id_product_tax").on("change onbur keyup keydown", function(event) { 
-    getTax()   
-    // calculate exclusive tax price values    
-    pricing();  
-  });
-  $("#id_wholesale_price").on("change keyup paste keydown", function(event) {
-    pricing();  
-  });
-</script>
 {% endif %}
  {% endblock %}}
 }

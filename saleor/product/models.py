@@ -8,7 +8,7 @@ from django.contrib.postgres.fields import HStoreField
 from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
-from django.db.models import F, Max, Q
+from django.db.models import F, Max, Q, Sum
 from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.text import slugify
 from django.utils.translation import pgettext_lazy
@@ -151,6 +151,9 @@ class Product(models.Model, ItemRange, index.Indexed):
         pgettext_lazy('Product field', 'updated at'), auto_now=True, null=True)
     is_featured = models.BooleanField(
         pgettext_lazy('Product field', 'is featured'), default=False)
+    low_stock_threshold = models.IntegerField(
+        pgettext_lazy('Product field', 'low stock threshold'),
+        validators=[MinValueValidator(0)], default=Decimal(10))
     
 
     objects = ProductManager()
@@ -190,6 +193,8 @@ class Product(models.Model, ItemRange, index.Indexed):
 
     def is_in_stock(self):
         return any(variant.is_in_stock() for variant in self)
+    def total_stock(self):
+        return Sum(self.variants.stock_available())
 
     def get_first_category(self):
         for category in self.categories.all():

@@ -242,6 +242,8 @@ def stock_edit(request, product_pk, stock_pk=None):
             return redirect(success_url)
     errors = form.errors
     ctx = {'form': form, 'product': product, 'stock': stock, 'errors':errors}
+    if request.is_ajax():
+        return TemplateResponse(request, 'dashboard/purchase/includes/add_stock_form.html', ctx)
     return TemplateResponse(request, 'dashboard/product/stock_form.html', ctx)
 
 

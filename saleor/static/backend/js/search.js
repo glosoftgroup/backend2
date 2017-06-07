@@ -36,7 +36,7 @@ $(function() {
    	var block = $(val).parent().parent().parent().parent().parent();
    	
         $(block).block({ 
-            message: '<i class="icon-spinner2 spinner"></i>',
+            message: '<i class="icon-spinner2 spinner"></i><br><span class="align-center">Please wait</span>',
             overlayCSS: {
                 backgroundColor: '#fff',
                 opacity: 0.8,

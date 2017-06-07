@@ -23,23 +23,18 @@
 
 {% block header_extra %}
   {% if sale.pk %}
-    <a class="dropdown-button right" href="#" data-activates="sale-delete"
-    data-constrainwidth="false">
-      <svg data-src="{% static "dashboard/images/more_vert.svg" %}" height="24" width="24" />
-    </a>
-    <ul id="sale-delete" class="dropdown-content">
-      <li>
-        <a class="modal-trigger-custom" href="#base-modal"
-        data-href="{% url 'dashboard:sale-delete' pk=sale.pk %}">
+    <li>
+        <a class="modal-trigger-ajax" href="#modal_instance" data-title="Edit {{ sale.name }} discount"
+        data-href="{% url 'dashboard:sale-delete' pk=sale.pk %}"><i class="icon-trash"></i>
           {% trans "Remove sale" context "Sale (discount) action" %}
         </a>
       </li>
-    </ul>
+   
   {% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}
-  <ul class="breadcrumbs breadcrumbs--history">
+ 
     <li>
       <a href="{% url 'dashboard:sale-list' %}">
         {% trans "Sales" context "Dashboard sales (discounts) list." %}
@@ -47,52 +42,57 @@
     </li>
     <li class="back-mobile">
       <a href="{% url 'dashboard:sale-list' %}">
-        <svg data-src="{% static "dashboard/images/arrow_left.svg" %}" fill="#fff" width="20px" height="20px" />
+        <i class="icon-arrow-left8"></i>
       </a>
     </li>
-    <li>
-      <span class="breadcrumbs--ellipsed-item">
+    <li class="active">      
         {% if sale.pk %}
           {{ sale }}
         {% else %}
           {% trans "Add new sale" context "Sale (discount) breadcrumbs" %}
-        {% endif %}
-      </span>
+        {% endif %}      
     </li>
-  </ul>
+ 
 {% endblock %}
 
 {% block menu_discounts_class %} active{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col m12 l9">
-      <div class="card">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
         <form method="post" enctype="multipart/form-data" id="form-sales" novalidate>
           <div class="card-content card-content-form">
             {% csrf_token %}
-            <div class="row">
-              {{ form.name|materializecss }}
-            </div>
-            <div class="row">
-              <div class="col s12 m8">
-                <div class="row">
-                  {{ form.value|materializecss }}
-                </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                {{ form.name|materializecss }}
               </div>
-              <div class="col s12 m4">
+              <div class="form-group">
+                {{ form.value|materializecss }}
+              </div>
+              <div class="form-group">
                 {{ form.type|materializecss:"input-field s12" }}
               </div>
             </div>
-            <div class="row">
-              {{ form.products|materializecss }}
-            </div>
-            <div class="row">
-              {{ form.categories|materializecss }}
-            </div>
+            <div class="col-md-6">              
+              <div class="form-group">
+                <label>Products</label>
+                <div class="multi-select-full">
+                {{ form.products }}
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Categories</label>
+                <div class="multi-select-full">
+                {{ form.categories }}
+                </div>
+              </div>
+            </div>           
+           
           </div>
 
-          <div class="card-action right-align">
+          <div class="card-action text-right col-md-12">
             {% if sale.pk %}
               <a href="{% url 'dashboard:sale-list' %}" class="btn btn-flat">
                 {% trans "Cancel" context "Dashboard cancel action" %}
@@ -114,4 +114,19 @@
     </div>
     <div class="col m12 l3 help-box"></div>
   </div>
+  {% include "dashboard/includes/_modal_template.html"  %}
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/plugins/forms/selects/bootstrap_select.min.js' %}"></script>
+ <script type="text/javascript" src="{% static 'backend/js/pages/form_multiselect.js' %}"></script>
+<script type="text/javascript">
+  // Basic select
+    $('.bootstrap-select').selectpicker();
+     // Default initialization
+    $(".styled, .multiselect-container input").uniform({
+        radioClass: 'choice'
+    });
+</script>
+<script type="text/javascript" src="{% static 'backend/js/backend.js' %}"></script>
 {% endblock %}
