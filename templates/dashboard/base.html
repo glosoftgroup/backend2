@@ -55,6 +55,27 @@
     <div class="navbar-collapse collapse" id="navbar-mobile">
       <ul class="nav navbar-nav">
         <li><a class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
+        <!-- search filter -->
+        <li>
+          <form action="#" class="main-search" style="margin:3px;">
+      <div class="input-group contentgroup">
+        <div class="has-feedback has-feedback-left">
+          <input type="text" id='search_product_main' name='search_product_main' class="form-control " value="" placeholder="Search product name/ SKU name">
+          <div class="form-control-feedback">
+            <i class="icon-search4 text-muted text-size-base"></i>
+          </div>
+          {% url "dashboard:search-sku" as url %}
+          <input class="hidden" type="hidden" id="csrf_token" value="{{ csrf_token }}" name="csrf_token">
+          <input type="hidden" class="hidden" value='{{ url }}' id='search_url_main' name="url">
+        </div>
+
+        <div class="input-group-btn hidden">
+          <button type="submit" id='main_search_box' onclick='return false' class="btn btn-primary ">Search</button>
+        </div>
+      </div>      
+    </form>
+        </li>
+        <!-- end search -->
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
@@ -238,10 +259,8 @@ margin-bottom: 0;">
 
 
         <!-- Content area -->
-        <div class="content" style="margin-top: 12px">
+        <div class="content" id="content" style="margin-top: 12px">   
 
-
-             
                 {% block content %}{% endblock %}
             
           
@@ -281,14 +300,15 @@ margin-bottom: 0;">
   <script type="text/javascript" src="{% static 'backend/js/pages/form_layouts.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/forms/styling/uniform.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'backend/js/plugins/notifications/pnotify.min.js' %}"></script>
- <script type="text/javascript" src="{% static 'backend/js/search.js' %}"></script>
+<script type="text/javascript" src="{% static 'backend/js/search.js' %}">
     <!-- Core Scripts - Include with every page -->
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
       
        
     {% include "dashboard/includes/_messages.html" %}
-   
+    
     {% block custom_js %}{% endblock %}
+
    </div>
   </body>
 </html>

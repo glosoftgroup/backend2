@@ -72,7 +72,7 @@
 	<td>
 	<span class="text-warning">
 	{% if variant.product.get_product_tax %}
-	{{ variant.product.get_product_tax }}%
+	{{ variant.product.get_product_tax }}
 	{% else %}
 	<i class="icon-menu position-left"></i> 
 	{% endif %}
@@ -87,7 +87,7 @@
 	data-href="{% url 'dashboard:product-stock-update' product_pk=variant.product.pk stock_pk=variant.get_stock_pk %}">
 	{% else %}
 	<td class='clickable-td' 
-	data-href="">
+	data-href="{% url 'dashboard:product-stock-add' product_pk=variant.product.pk %}">
 	{% endif %}
 	<span class="label bg-success-400">Add stock
 	</span>

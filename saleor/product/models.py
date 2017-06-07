@@ -111,7 +111,7 @@ class ProductTax(models.Model):
     tax = models.IntegerField( pgettext_lazy('Product Tax', 'tax %'),
         validators=[MinValueValidator(0)], default=Decimal(0)) 
     def __str__(self):
-        return str(self.tax)
+        return self.name+' '+str(self.tax)+' %'
 
 class ProductManager(models.Manager):
 

@@ -506,6 +506,13 @@ def tax_list(request):
 def tax_add_ajax(request):
     if request.method == 'POST':
         if request.is_ajax():
+            tax_id = request.POST.get("tax_id")
+            if tax_id: 
+                product_tax = ProductTax()
+                tax = ProductTax.objects.filter(pk=tax_id)
+                for t in tax:
+                    tax = t.tax
+                return HttpResponse(tax)
             product_tax = ProductTax()
             formadd = ProductTaxForm(request.POST or None,
                                   instance=product_tax)

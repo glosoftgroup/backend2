@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^tax/add$',
         views.tax_add, name='tax-add'),
     url(r'^tax/add/ajax$',
-        views.tax_add_ajax, name='tax-add-ajax'),
+        views.tax_add_ajax, name='tax-add-ajax'),    
     url(r'^tax/delete/(?P<pk>[0-9]+)/$',
         views.tax_delete, name='tax-delete'),
     url(r'^tax/edit(?P<pk>[0-9]+)/$',
