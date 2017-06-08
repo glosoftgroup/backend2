@@ -276,7 +276,7 @@ PAGINATE_BY = 16
 BOOTSTRAP3 = {
     'set_placeholder': False,
     'set_required': False,
-    'success_css_class': '',
+    'success_css_class': 'success',
     'form_renderers': {
         'default': 'saleor.core.utils.form_renderer.FormRenderer',
     },
@@ -403,3 +403,11 @@ SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id, email'}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

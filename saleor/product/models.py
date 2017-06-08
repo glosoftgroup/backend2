@@ -100,8 +100,7 @@ class ProductClass(models.Model):
         return '<%s.%s(pk=%r, name=%r)>' % (
             class_.__module__, class_.__name__, self.pk, self.name)
 
-class ProductTax(models.Model):
-    
+class ProductTax(models.Model):    
     name = models.CharField(
         pgettext_lazy('Tax name', 'Tax name (optional)'),
         max_length=128, blank=True)   
@@ -112,6 +111,8 @@ class ProductTax(models.Model):
         validators=[MinValueValidator(0)], default=Decimal(0)) 
     def __str__(self):
         return self.name+' '+str(self.tax)+' %'
+    def get_tax(self):
+        return self.tax
 
 class ProductManager(models.Manager):
 
@@ -127,7 +128,7 @@ class Product(models.Model, ItemRange, index.Indexed):
         ProductClass, related_name='products',
         verbose_name=pgettext_lazy('Product field', 'product class'))
     product_tax = models.ForeignKey(
-        ProductTax, related_name='products_tax',blank=True, null=True,
+        ProductTax, related_name='taxs',blank=True, null=True,
         verbose_name=pgettext_lazy('Product field', 'product class'))
     name = models.CharField(
         pgettext_lazy('Product field', 'name'), max_length=128)
@@ -190,9 +191,12 @@ class Product(models.Model, ItemRange, index.Indexed):
     
     def get_product_tax(self):
         return self.product_tax
+    def get_tax_value(self):
+        return self.product_tax.get_tax()
 
     def is_in_stock(self):
         return any(variant.is_in_stock() for variant in self)
+
     def total_stock(self):
         return Sum(self.variants.stock_available())
 

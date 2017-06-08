@@ -9,9 +9,7 @@
 *
 * ---------------------------------------------------------------------------- */
 
-$(function() {
-
-  
+$(function() {  
   $('.modal-trigger').on('click', function (e) {
     let that = this;  
     var url = $(this).data('href') 
@@ -20,10 +18,9 @@ $(function() {
     
     $('.modal-title').html(prompt_text);
     $(modal).modal();
-    $('.delete_form').attr('action',url);
-    
-   
+    $('.delete_form').attr('action',url);   
   });
+  
   // update modal content from ajax results
   $( ".modal-trigger-ajax").on('click',function() {   
        

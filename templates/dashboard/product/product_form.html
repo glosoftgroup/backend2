@@ -512,7 +512,7 @@
                 </th>
                 <th> Cost Price</th>
                 <th>
-                  Sales Price
+                  Retail Price
                 </th>
                 
                 <th class="wide">
@@ -776,7 +776,7 @@
       pricing();      
   });
   $("#id_product_tax").on("change onbur keyup keydown", function(event) {     
-    //getTax();   
+    getTax();   
     // calculate exclusive tax price values    
     pricing();  
   });

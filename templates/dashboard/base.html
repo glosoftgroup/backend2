@@ -79,7 +79,18 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Text link</a></li>
+        <li class="dropdown">
+      <a href="task_manager_grid.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cogs position-left"></i> Actions <span class="caret"></span></a>
+      <ul class="dropdown-menu">
+        <li><a href="{% url 'dashboard:product-add' %}">Add product</a></li>
+        <li class="divider"></li>
+        <li><a href="{% url 'dashboard:category-list' %}">Manage Product Category</a></li>
+        <li><a href="{% url 'dashboard:product-class-list' %}">Manage Product Types</a></li>
+        <li><a href="{% url 'dashboard:product-attributes' %}">Manage Product Attribute</a></li>
+        <li><a href="{% url 'dashboard:tax-list' %}">Manage Tax</a></li>
+        <li><a href="{% url 'dashboard:sale-list' %}">Manage Discounts</a></li>   
+      </ul>
+    </li>
 
         <li>
           <a href="#">

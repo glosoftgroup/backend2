@@ -55,7 +55,7 @@
 	<!-- Retail price -->
 	<td>
 	<h6 class="text-semibold">
-	{% if variant.price_override %}
+	{% if variant.get_price_per_item %}
 	 {% gross variant.get_price_per_item html=True %}
 	{% endif %}
 	</h6>

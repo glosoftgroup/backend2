@@ -604,8 +604,9 @@ def search_product(request):
             search  = request.POST.get("search_product", "--") 
             product = Product()
             products_count = len(Product.objects.all())
-            product_results = Product.objects.filter(Q(name__icontains=search)|Q(variants__sku__icontains=search))
-            #Q(productvariant__sku__icontains=search)
+            product_results = Product.objects.filter(Q(name__icontains=search)|
+                        Q(variants__sku__icontains=search)|
+                        Q(categories__name__icontains=search))
             search_count = len(product_results)
             ctx = {'products_count': products_count,'product_results': product_results,'search_count':search_count}
             return TemplateResponse(

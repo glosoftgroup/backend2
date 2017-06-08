@@ -6,6 +6,7 @@ from django.contrib.staticfiles.views import serve
 from django.views.i18n import javascript_catalog
 from graphene_django.views import GraphQLView
 
+from .api.product.urls import urlpatterns as api_urls
 from .cart.urls import urlpatterns as cart_urls
 from .checkout.urls import urlpatterns as checkout_urls
 from .core.sitemaps import sitemaps
@@ -18,9 +19,13 @@ from .registration.urls import urlpatterns as registration_urls
 from .search.urls import urlpatterns as search_urls
 from .userprofile.urls import urlpatterns as userprofile_urls
 
-urlpatterns = [
-    url(r'^', include(core_urls)),
+from .api.product import views as api_views
+
+
+urlpatterns = [    
+    url(r'^', include(core_urls)),    
     url(r'^account/', include(registration_urls)),
+    url(r'^api/products/', include(api_urls, namespace='users-api')),
     url(r'^cart/', include(cart_urls, namespace='cart')),
     url(r'^checkout/', include(checkout_urls, namespace='checkout')),
     url(r'^dashboard/', include(dashboard_urls, namespace='dashboard')),
@@ -35,6 +40,7 @@ urlpatterns = [
         name='django.contrib.sitemaps.views.sitemap'),
     url(r'', include('payments.urls')),
     url('', include('social_django.urls', namespace='social')),
+
 ]
 
 if settings.DEBUG:
