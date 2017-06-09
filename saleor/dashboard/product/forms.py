@@ -72,8 +72,6 @@ class StockForm(forms.ModelForm):
         field = self.fields['location'] 
         field.widget.attrs['class'] = 'form-control bootstrap-select'
 
-
-
 class ProductClassForm(forms.ModelForm):
     class Meta:
         model = ProductClass

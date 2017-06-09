@@ -17,24 +17,23 @@
   {% include "dashboard/includes/_back-link.html" with url=url %}
 {% endblock %}
 
-{% block breadcrumbs %}
-  <ul class="breadcrumbs breadcrumbs--history">
+{% block breadcrumbs %}  
     <li>
       <a href="{% url "dashboard:customers" %}">
         {% trans "Customers" context "Dashboard customers list" %}
       </a>
     </li>
-    <li class="back-mobile">
+    <li class="active">
       <a href="{% url "dashboard:customers" %}">
-        <svg data-src="{% static "dashboard/images/arrow_left.svg" %}" fill="#fff" width="20px" height="20px" />
+        Back
       </a>
     </li>
-    <li><span class="breadcrumbs--elipsed-item">{{ customer }}</span></li>
+    <li><span >{{ customer }}</span></li>
   </ul>
 {% endblock %}
 
 {% block content %}
-  <div class="row">
+  <div class="panel panel-default">
     <div class="col s12 l8">
       <div class="card">
         <div class="data-table-header{% if not customer_orders %} data-table-header--no-data{% endif %}">
@@ -43,10 +42,10 @@
           </h5>
         </div>
         {% if customer_orders %}
-          <div class="data-table-container">
-            <table class="bordered highlight responsive data-table">
+          <div class="table-responsive">
+            <table class="table bordered highlight responsive data-table">
               <thead>
-                <tr>
+                <tr class="bg-primary">
                   <th>
                     {% trans "Number" context "Customer orders table header" %}
                   </th>
@@ -63,7 +62,7 @@
               </thead>
               <tbody>
                 {% for order in customer_orders %}
-                  <tr data-action-go="{% url 'dashboard:order-details' order_pk=order.pk %}">
+                  <tr class='clickable-row' data-href="{% url 'dashboard:order-details' order_pk=order.pk %}">
                     <td>
                       {{ order }}
                     </td>
@@ -74,7 +73,10 @@
                       {% render_status order.status order.get_status_display %}
                     </td>
                     <td class="right-align">
+                      {% if order.get_total %}
                       {% gross order.get_total html=True %}
+                      {% endif %}
+                     
                     </td>
                   </tr>
                 {% endfor %}
@@ -91,7 +93,7 @@
       </div>
     </div>
     <div class="col s12 l4">
-      <div class="row">
+      <div class="panel-body">
         <div class="col s12 m6 p6 l12">
           <div class="card equal-height-on-med">
             <div class="card-content">
@@ -114,7 +116,7 @@
         </div>
         <div class="col s12 m6 p6 l12">
           <div class="card equal-height-on-med">
-            <div class="card-content">
+            <div class="panel-content">
               <span class="card-title black-text">
                 {% trans "Default billing address" context "Customer default billing address card title" %}
               </span>
@@ -133,4 +135,16 @@
       </div>
     </div>
   </div>
+{% endblock %}
+{% block custom_js %}
+<style type="text/css">
+  .clickable-row { cursor: pointer; }
+</style>
+<script type="text/javascript">
+   $(document).ready(function() {
+     $(".clickable-row").click(function() {
+      window.location = $(this).data("href");
+     });
+ });
+</script>
 {% endblock %}

@@ -20,8 +20,13 @@ from rest_framework.generics import (ListAPIView,
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from django.contrib.auth.models import Permission
-from ...product.models import Product
+from ...product.models import (
+    Product,
+    ProductVariant,
+    Stock,
+    )
 from .serializers import (
+    CreateStockSerializer,
     ProductStockListSerializer,
     ProductListSerializer,
     UserListSerializer,    
@@ -35,6 +40,11 @@ class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = User.objects.all()
+
+class CreateStockAPIView(CreateAPIView):
+    serializer_class = CreateStockSerializer
+    #permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Stock.objects.all()
 
 
 # class UserCreateAPIView(CreateAPIView):
@@ -58,10 +68,11 @@ class UserDeleteAPIView(DestroyAPIView):
 
 class ProductListAPIView(generics.ListAPIView):
     #permission_classes = [IsAuthenticatedOrReadOnly]    
+    pagination_class = PostLimitOffsetPagination
     serializer_class = ProductListSerializer
 
     def get_queryset(self, *args, **kwargs):        
-        queryset_list = Product.objects.all()
+        queryset_list = Product.objects.all().select_related()
         query = self.request.GET.get('q')
         if query:
             queryset_list = queryset_list.filter(
@@ -73,16 +84,16 @@ class ProductListAPIView(generics.ListAPIView):
 
 class ProductStockListAPIView(generics.ListAPIView):
     #permission_classes = [IsAuthenticatedOrReadOnly]    
+    pagination_class = PostLimitOffsetPagination
     serializer_class = ProductStockListSerializer
 
     def get_queryset(self, *args, **kwargs):        
-        queryset_list = Product.objects.all()
+        queryset_list = ProductVariant.objects.all().select_related()
         query = self.request.GET.get('q')
         if query:
             queryset_list = queryset_list.filter(
-                Q(name__icontains=query)|
-                Q(variants__sku__icontains=query)|
-                Q(categories__name__icontains=query)
+                Q(sku__icontains=query) |
+                Q(product__name__icontains=query)
                 ).distinct()
         return queryset_list
 

@@ -160,10 +160,10 @@
 
   $("#id_name").on("change keyup paste keydown", function(event) {
     
-       var slug = $(this).val();             
+       var slug = $(this).val(); 
+       slug = slug.split(' ').join('_')            
        $('#id_slug').attr('value',slug);
-       var slug = $(this).val();
-   
+       var slug = $(this).val();   
   });
   
 </script>

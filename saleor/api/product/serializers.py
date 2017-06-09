@@ -13,9 +13,15 @@ from django.contrib.auth import get_user_model
 from ...product.models import (
     Product,
     ProductVariant,
+    Stock,
     )
 
 User = get_user_model()
+
+class CreateStockSerializer(ModelSerializer):
+    class Meta:
+        model = Stock
+        exclude = ['quantity_allocated']
 
 class UserCreateSerializer(ModelSerializer):
     email    = EmailField(label='Email address')
@@ -52,25 +58,68 @@ class UserListSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'email', 'url', 'delete_url')
 
+
 class ProductListSerializer(serializers.ModelSerializer):    
     vat_tax = SerializerMethodField()
-    item_price = SerializerMethodField()
+    item_price = SerializerMethodField()    
     class Meta:
         model = Product
-        fields = ('id', 'name', 'vat_tax','item_price')
+        fields = (
+            'id', 
+            'name',
+            'vat_tax',
+            'item_price',
+           )
     def get_vat_tax(self, obj):
-        tax = obj.get_tax_value()
+        if obj.product_tax:
+            tax = obj.product_tax.tax
+        else:
+            tax = 0
         return tax
     def get_item_price(self,obj):
         item_price = obj.price.gross
         return item_price
 
+
 class ProductStockListSerializer(serializers.ModelSerializer):    
-    #vat_tax = SerializerMethodField()
-    #item_price = SerializerMethodField()
-    class Meta:
+    productName = SerializerMethodField()
+    price = SerializerMethodField()
+    quantity = SerializerMethodField()
+    productlist = UserListSerializer(required=False)
+    tax =SerializerMethodField()
+    class Meta:        
         model = ProductVariant
-        fields = ('id', 'display_product')
+        fields = (
+            'id',
+            'productName',
+            'sku',
+            'price',
+            'tax',
+            'productlist',
+            'quantity',
+            )
+    def get_quantity(self,obj):
+        quantity = obj.get_stock_quantity()
+        return quantity
+    def get_productName(self,obj):
+        productName = obj.display_product()
+        return productName
+    def get_price(self,obj):
+        price = obj.get_price_per_item().gross
+        return price
+    def get_tax(self,obj):
+        if obj.product.product_tax:
+            tax = obj.product.product_tax.tax
+        else:
+            tax = 0        
+        return tax
+
+
+
+class ProductVariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductVariant         
+
 
 
 # PERMISSIONS SERIALIZERS

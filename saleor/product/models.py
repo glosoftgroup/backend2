@@ -128,7 +128,7 @@ class Product(models.Model, ItemRange, index.Indexed):
         ProductClass, related_name='products',
         verbose_name=pgettext_lazy('Product field', 'product class'))
     product_tax = models.ForeignKey(
-        ProductTax, related_name='taxs',blank=True, null=True,
+        ProductTax, related_name='producttax',blank=True, null=True,
         verbose_name=pgettext_lazy('Product field', 'product class'))
     name = models.CharField(
         pgettext_lazy('Product field', 'name'), max_length=128)

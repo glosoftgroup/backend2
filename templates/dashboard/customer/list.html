@@ -12,20 +12,20 @@
 {% block menu_customers_class %}active{% endblock %}
 
 {% block breadcrumbs %}
-  <ul class="breadcrumbs">
-    <li class="visible-s">
+  
+    <li class="active">
       {% trans "Customers" context "Dashboard customers list" %}
     </li>
-  </ul>
+  
 {% endblock %}
 
 {% block content %}
   {% if customers %}
-    <div class="card">
-      <div class="data-table-container">
-        <table class="bordered highlight responsive data-table">
+    <div class="panel panel-default">
+      <div class="table-responsive">
+        <table class="table bordered highlight responsive data-table">
           <thead>
-            <tr>
+            <tr class="bg-primary">
               <th>
                 {% trans "Email" context "Customers table header" %}
               </th>
@@ -45,7 +45,7 @@
           </thead>
           <tbody>
             {% for customer in customers %}
-              <tr data-action-go="{% url "dashboard:customer-details" pk=customer.pk %}">
+              <tr class="clickable-row" data-href="{% url "dashboard:customer-details" pk=customer.pk %}">
                 {% with customer.default_billing_address as default_address %}
                   <td>
                     {{ customer.email }}
@@ -87,4 +87,17 @@
     </div>
   {% endif %}
   {% include "dashboard/includes/_pagination.html" with page_obj=customers %}
+{% endblock %}
+{% block custom_js %}
+<style type="text/css">
+  .clickable-row { cursor: pointer; }
+</style>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".clickable-row").click(function() 
+     {
+      window.location = $(this).data("href");
+     });
+  });
+</script>
 {% endblock %}
