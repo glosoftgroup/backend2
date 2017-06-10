@@ -2,24 +2,20 @@
 {% load product_first_image from product_images %}
 {% load i18n %}
 {% load prices_i18n %}
-<div class="panel panel-flat">
-  <div class="panel-body">
-  <!-- search count -->
-  <p class="text-muted text-size-small">
-  {% if search_count %}   
+<!-- search count -->
+  
+  {% if search_count %} 
+  <div class="text-center content-text-muted content-divider">
+  <span class="pt-10 pb-10">
    {{ search_count }} results of {{ products_count  }}
+   </span>  
+   </div>
   {% endif %}
-  </p>
-        <div class="panel-heading">        
-          {% include "dashboard/includes/_pagination.html" with page_obj=product_results %}
-          <div class="heading-elements">
-            <ul class="icons-list">              
-              <li><a data-action="collapse"></a></li>       
-              <li><a data-action="close"></a></li>
-            </ul>
-          </div>
-        </div>
- <table class="table table-bordered datatable-header-footer">
+  
+<div class="panel panel-default">
+  <div class="table-responsive">  
+        
+ <table class="table  datatable-header-footer">
     <thead>
       <tr class="bg-primary">
         <th>Id</th>
@@ -77,7 +73,7 @@
           </a>  
         </li>
         <li>
-          <a href="{{ product.get_absolute_url }}"><i class="icon-eye position-left" data-popup="tooltip" tite='Edit product' data-placement="bottom" data-original-title="View me on site"></i>   </a>
+          <!-- <a href="{{ product.get_absolute_url }}"><i class="icon-eye position-left" data-popup="tooltip" tite='Edit product' data-placement="bottom" data-original-title="View me on site"></i>   </a> -->
         </li>
       </ul>
     </td>

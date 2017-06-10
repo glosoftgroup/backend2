@@ -24,8 +24,7 @@ class CreateStockSerializer(ModelSerializer):
         exclude = ['quantity_allocated']
 
 class UserCreateSerializer(ModelSerializer):
-    email    = EmailField(label='Email address')
-    #profile  = ProfileSerializer(required=False)
+    email    = EmailField(label='Email address')    
     class Meta:
         model = User
         fields = [            
@@ -69,6 +68,7 @@ class ProductListSerializer(serializers.ModelSerializer):
             'name',
             'vat_tax',
             'item_price',
+            'description',
            )
     def get_vat_tax(self, obj):
         if obj.product_tax:
@@ -86,7 +86,8 @@ class ProductStockListSerializer(serializers.ModelSerializer):
     price = SerializerMethodField()
     quantity = SerializerMethodField()
     productlist = UserListSerializer(required=False)
-    tax =SerializerMethodField()
+    tax = SerializerMethodField()
+    #description = SerializerMethodField()
     class Meta:        
         model = ProductVariant
         fields = (
@@ -96,7 +97,7 @@ class ProductStockListSerializer(serializers.ModelSerializer):
             'price',
             'tax',
             'productlist',
-            'quantity',
+            'quantity',            
             )
     def get_quantity(self,obj):
         quantity = obj.get_stock_quantity()
@@ -104,6 +105,8 @@ class ProductStockListSerializer(serializers.ModelSerializer):
     def get_productName(self,obj):
         productName = obj.display_product()
         return productName
+    # def get_description(self,obj):
+    #     return self.products.description
     def get_price(self,obj):
         price = obj.get_price_per_item().gross
         return price

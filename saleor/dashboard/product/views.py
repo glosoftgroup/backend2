@@ -87,7 +87,7 @@ def product_class_delete(request, pk):
 
 @staff_member_required
 def product_list(request):
-    products = Product.objects.prefetch_related('images')
+    products = Product.objects.prefetch_related('images').order_by('-id')
     product_classes = ProductClass.objects.all()
     form = forms.ProductClassSelectorForm(
         request.POST or None, product_classes=product_classes)
@@ -628,4 +628,45 @@ def search_sku(request):
             ctx = {'products_count': products_count,'product_results': product_results,'search_count':search_count}
             return TemplateResponse(
         request, 'dashboard/includes/sku_search_results.html',
+        ctx)
+
+@staff_member_required
+def search_productclass(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            search  = request.POST.get("search_product", "--") 
+            product_class = ProductClass()
+            productClass_count = len(ProductClass.objects.all())
+            productClass_results = ProductClass.objects.filter(
+                name__icontains=search                
+                ).all().prefetch_related('product_attributes', 'variant_attributes')            
+            productClass_results = get_paginator_items(productClass_results, 30, request.GET.get('page'))
+            productClass_results.object_list = [
+                (pc.pk, pc.name, pc.has_variants, pc.product_attributes.all(),
+                    pc.variant_attributes.all())
+                for pc in productClass_results.object_list]
+            search_count = len(productClass_results)
+            ctx = {'productClass_count': productClass_count,'productClass_results': productClass_results,'search_count':search_count}
+            return TemplateResponse(
+        request, 'dashboard/includes/class_search_results.html',
+        ctx)
+@staff_member_required
+def search_attribute(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            search  = request.POST.get("search_product", "--") 
+            attributes = [
+                (attribute.pk, attribute.name, attribute.values.all())
+            for attribute in ProductAttribute.objects.filter(name__icontains=search).prefetch_related('values')]
+    
+            productAttribute_count = len(ProductAttribute.objects.all())
+            productAttribute_results = ProductAttribute.objects.filter(name__icontains=search)            
+            search_count = len(attributes)
+            ctx = {
+            'productAttribute_count': productAttribute_count,
+            'attributes': attributes,
+            'search_count':search_count
+            }
+            return TemplateResponse(
+        request, 'dashboard/includes/attribute_search_results.html',
         ctx)

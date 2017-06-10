@@ -36,8 +36,10 @@ urlpatterns = [
     # search routes
     url(r'^search_ajax/$',
         views.search_product, name='search-product'),
-     url(r'^search_sku/$',
+    url(r'^search_sku/$',
         views.search_sku, name='search-sku'),
+    url(r'^search_productclass/$',
+        views.search_productclass, name='search-type'),
     # end search routes
     url(r'^classes/$',
         views.product_class_list, name='product-class-list'),
@@ -79,6 +81,9 @@ urlpatterns = [
 
     url(r'attributes/$',
         views.attribute_list, name='product-attributes'),
+    url(r'attributes/search$',
+        views.search_attribute, name='search-attribute'),
+    
     url(r'attributes/(?P<pk>[0-9]+)/$',
         views.attribute_edit, name='product-attribute-update'),
     url(r'attributes/add/$',

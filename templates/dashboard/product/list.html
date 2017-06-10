@@ -29,6 +29,11 @@
 {% block header_extra %}
   {% if product_classes %}
     {% if product_classes|length > 1 %}
+    <!-- search field -->
+    {% url "dashboard:search-product" as url %}
+    {% include "dashboard/includes/_search_filter.html" with url=url  %}
+    <!-- end search -->
+    <li>&nbsp;&nbsp;&nbsp;</li>
      <li >
         <a class="" style="box-shadow: 0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.18);" href="{% url 'dashboard:product-add' %}" title="{% trans 'Add product' context 'Product list add button text' %}">
          <i class="icon-plus3 position-left"></i>Add Product
@@ -64,10 +69,7 @@
 {% block menu_catalogue_class %} active{% endblock %}
 
 {% block content %}
-<div class="">
-{% url "dashboard:search-product" as url %}
-{% include "dashboard/includes/_product_filter.html" with url=url  %}
-</div>
+
 <div class="clearfix"></div>
   <div class="" id="search_results">
     <div class="col s12">
@@ -93,7 +95,7 @@
                     <th>Product Name</th>
                     <th>Variants</th>
                     <th>Price</th>
-                    <th>Quantity</th>
+                    <th>Variant</th>
                     <th class="text-center">Actions</th>
                   </tr>
                 </thead>
@@ -145,7 +147,7 @@
                           </a>  
                         </li>
                         <li>
-                          <a href="{{ product.get_absolute_url }}"><i class="icon-eye position-left" data-popup="tooltip" tite='Edit product' data-placement="bottom" data-original-title="View me on site"></i>   </a>
+                          <!-- <a href="{{ product.get_absolute_url }}"><i class="icon-eye position-left" data-popup="tooltip" tite='Edit product' data-placement="bottom" data-original-title="View me on site"></i>   </a> -->
                         </li>
                       </ul>
                     </td>

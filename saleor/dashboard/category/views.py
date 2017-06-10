@@ -8,17 +8,18 @@ from django.utils.translation import pgettext_lazy
 from ...product.models import Category
 from ..views import staff_member_required
 from .forms import CategoryForm
+from django.db.models import Q
 
 
 @staff_member_required
 def category_list(request, root_pk=None):
     root = None
     path = None
-    categories = Category.tree.root_nodes()
+    categories = Category.tree.root_nodes().order_by('-id')
     if root_pk:
         root = get_object_or_404(Category, pk=root_pk)
         path = root.get_ancestors(include_self=True) if root else []
-        categories = root.get_children()
+        categories = root.get_children().order_by('-id')
     ctx = {'categories': categories, 'path': path, 'root': root}
     return TemplateResponse(request, 'dashboard/category/list.html', ctx)
 
@@ -62,6 +63,22 @@ def category_edit(request, root_pk=None):
     ctx = {'category': category, 'form': form, 'status': status}
     template = 'dashboard/category/modal_edit.html'
     return TemplateResponse(request, template, ctx, status=status)
+
+@staff_member_required
+def search_category(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            search  = request.POST.get("search_product", "--") 
+            category = Category()
+            categories_count = len(Category.objects.all())
+            category_results = Category.objects.filter(
+                        name__icontains=search                        
+                       )
+            search_count = len(category_results)
+            ctx = {'categories_count': categories_count,'category_results': category_results,'search_count':search_count}
+            return TemplateResponse(
+        request, 'dashboard/includes/category_search_results.html',
+        ctx)
 
 
 @staff_member_required

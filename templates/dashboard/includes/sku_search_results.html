@@ -2,11 +2,13 @@
 {% load product_first_image from product_images %}
 {% load i18n %}
 {% load prices_i18n %}
- <p class="text-muted text-size-small">
-  {% if search_count %}   
+ {% if search_count %} 
+  <div class="text-center content-text-muted content-divider">
+  <span class="pt-10 pb-10">
    {{ search_count }} results of {{ products_count  }}
+   </span>  
+   </div>
   {% endif %}
-  </p>
 <!-- output data -->
 <div class="panel panel-default">
   <div class="panelbody">

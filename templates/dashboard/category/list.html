@@ -24,6 +24,13 @@
 {% endblock %}
 
 {% block header_extra %}
+    {% if not root %}
+    <!-- search field -->
+    {% url "dashboard:search-category" as url %}
+    {% include "dashboard/includes/_search_filter.html" with url=url  %}
+    <!-- end search -->
+    {% endif %}
+    <li>&nbsp;&nbsp;&nbsp;</li>
   <li>
     <a class="" href="{% if root %}{% url 'dashboard:category-add' root_pk=root.pk %}{% else %}{% url 'dashboard:category-add' %}{% endif %}"><i class="icon-plus3"></i>
      Add category

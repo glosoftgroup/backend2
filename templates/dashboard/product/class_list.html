@@ -13,6 +13,11 @@
 {% block menu_product_classes_class %}active{% endblock %}
 
 {% block header_extra %}
+   <!-- search field -->
+    {% url "dashboard:search-type" as url %}
+    {% include "dashboard/includes/_search_filter.html" with url=url  %}
+    <!-- end search -->
+    <li>&nbsp;&nbsp;</li>
 <li>              
     <a href="{% url 'dashboard:product-class-add' %}" class="" style="box-shadow: 0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.18);"><i class="icon-plus3 position-left"></i> Add product Type</a>
 </li>
